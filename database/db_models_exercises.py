@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 from database.db_models_general import Base
 
 # Define the SQLite database
-DATABASE_URL = "sqlite:///language_trainer.db"
+DATABASE_URL = "sqlite:///database/language_trainer.db"
 # Set echo=False to silence logs
 engine = create_engine(DATABASE_URL, echo=True)
 
