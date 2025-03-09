@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey, DateTime, Enum
 from sqlalchemy.orm import sessionmaker, relationship
-from database.db_models_general import Base
+from db_models_general import Base
 
 # Define the SQLite database
 DATABASE_URL = "sqlite:///language_trainer.db"

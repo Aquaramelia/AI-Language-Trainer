@@ -1,4 +1,4 @@
-from database.db_models_general import SessionLocal, Vocabulary, User, Exercise
+from db_models_general import SessionLocal, Vocabulary, User, Exercise
 
 
 def add_user(username, password):

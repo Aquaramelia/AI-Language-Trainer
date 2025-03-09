@@ -1,5 +1,5 @@
-from database.db_models_exercises import Noun, NounExercise, Verb, VerbExercise
-from database.db_models_general import SessionLocal, Vocabulary, User, Exercise
+from db_models_exercises import Noun, NounExercise, Verb, VerbExercise
+from db_models_general import SessionLocal, Vocabulary, User, Exercise
 
 
 def add_verb(infinitive, past_simple, past_participle):
