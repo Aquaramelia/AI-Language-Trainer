@@ -1,25 +1,29 @@
-from db_models_exercises import Noun, NounExercise, Verb, VerbExercise
-from db_models_general import SessionLocal, Vocabulary, User, Exercise
-
+from database.db_models_exercises import Noun, NounExercise, Verb, VerbExercise
+from database.db_models_general import SessionLocal, Vocabulary, User, Exercise
 
 def add_verb(infinitive, past_simple, past_participle):
-    """Adds a new verb to the database."""
-    session = SessionLocal()
-    verb = Verb(infinitive=infinitive, past_simple=past_simple,
-                past_participle=past_participle)
-    session.add(verb)
-    session.commit()
-    session.close()
+    try:
+        """Adds a new verb to the database."""
+        session = SessionLocal()
+        verb = Verb(infinitive=infinitive, past_simple=past_simple,
+                    past_participle=past_participle)
+        session.add(verb)
+        session.commit()
+        session.close()
+    except Exception as e:
+        print(f"Verb addition failed: {e}")
 
 
 def add_noun(word, article):
-    """Adds a noun with its correct article."""
-    session = SessionLocal()
-    noun = Noun(word=word, article=article)
-    session.add(noun)
-    session.commit()
-    session.close()
-
+    try:
+        """Adds a noun with its correct article."""
+        session = SessionLocal()
+        noun = Noun(word=word, article=article)
+        session.add(noun)
+        session.commit()
+        session.close()
+    except Exception as e:
+        print(f"Noun addition failed: {e}")
 
 def log_verb_exercise(user_id, verb_id, correct):
     """Logs the user's verb conjugation attempt."""
