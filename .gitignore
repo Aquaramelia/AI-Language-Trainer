@@ -13,6 +13,10 @@ __pycache__/
 # SQLite databases
 *.db
 
+# CSV files for vocabulary, noun and verb data
+*.csv
+*.csv#
+
 # Distribution / packaging
 .Python
 build/
