@@ -1,3 +1,4 @@
+import json
 from google import genai
 import os
 from dotenv import load_dotenv
@@ -6,6 +7,7 @@ from database.db_helpers_exercises import get_difficult_nouns, get_difficult_ver
 
 load_dotenv()
 API_KEY = os.environ["API_KEY"]
+
 
 def generate_verb_exercise():
     """Generates a verb conjugation exercise using the user's weak verbs."""
@@ -65,19 +67,22 @@ def generate_noun_exercise():
     {noun_list}
 
     - Create **multiple-choice questions** where the learner picks the correct article.
-    - Provide the answer in JSON format.
+    - Include the noun ID for tracking.
+    - Provide the answer in **valid JSON dictionary format**.
     - Example output:
       {{
           "questions": [
               {{
-                  "question": "What is the correct article for 'Tisch'?",
-                  "options": ["der", "die", "das"],
-                  "answer": "der"
-              }},
-              {{
+                  "noun_id": 1,
                   "question": "What is the correct article for 'Auto'?",
                   "options": ["der", "die", "das"],
                   "answer": "das"
+              }},
+              {{
+                  "noun_id": 2,
+                  "question": "What is the correct article for 'Lampe'?",
+                  "options": ["der", "die", "das"],
+                  "answer": "die"
               }}
           ]
       }}
@@ -88,8 +93,14 @@ def generate_noun_exercise():
     response = client.models.generate_content(
         model="gemini-2.0-flash", contents=question_prompt
     )
+    cleaned_response = response.text.strip("```json").strip("```").strip()
 
-    return response.text  # Return JSON-formatted exercises
+    try:
+        exercise_data = json.loads(cleaned_response)
+        return exercise_data  # Now it returns a dictionary
+    except json.JSONDecodeError:
+        return {"message": "Error: Could not parse exercise data."}
+
 
 print(generate_verb_exercise())
 print(generate_noun_exercise())
