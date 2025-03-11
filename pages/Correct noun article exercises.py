@@ -1,6 +1,7 @@
 import streamlit as st
 from database.db_helpers_exercises import log_noun_exercise
 from question_generation import generate_noun_exercise
+from streamlit_js_eval import streamlit_js_eval
 
 st.set_page_config(
     page_title="Noun Article Exercises - AI Language Trainer", page_icon="📖")
@@ -14,9 +15,12 @@ if "exercise_data" not in st.session_state:
 else:
     st.session_state.llm_called = False
 
-# Initialize score
+# Initialize score and asked questions tracker
 if "score" not in st.session_state:
     st.session_state.score = 0
+
+if "asked_questions" not in st.session_state:
+    st.session_state["asked_questions"] = []
 
 st.title("German Article Trainer 🇩🇪")
 st.write("Practice choosing the correct German articles: *der, die, das*.")
@@ -32,6 +36,9 @@ if "message" in exercise_data:
     st.info(exercise_data["message"])
 else:
     for i, q in enumerate(exercise_data["questions"]):
+        if q["noun_id"] in st.session_state["asked_questions"]:
+            continue  # Skip if the question has already been asked
+
         st.subheader(q["question"])
 
         # Initialize session state for each question if not set
@@ -43,7 +50,7 @@ else:
             # Flag to track if answered
             st.session_state[f"answered_{q['noun_id']}"] = False
 
-       # Disable the radio button and submit button if the question is already answered
+        # Disable the radio button and submit button if the question is already answered
         is_answered = st.session_state[f"answered_{q['noun_id']}"]
 
         # Radio button stores selection in session state
@@ -78,13 +85,27 @@ else:
 
             # Mark the question as answered so the score won't be added again
             st.session_state[f"answered_{q['noun_id']}"] = True
+            st.session_state["asked_questions"].append(
+                q["noun_id"])  # Track this question as asked
 
             # Log the response without querying the database
             log_noun_exercise(USER_ID, q["noun_id"], is_correct)
-            
+
             # Force a re-run to reflect the updated score immediately
             st.rerun()
 
         # Ensure the selected answer gets locked after submission by updating session state
         if is_answered:
             st.session_state[f"selected_{q['noun_id']}"] = selected
+
+# Check if all questions have been answered
+if len(st.session_state["asked_questions"]) == len(exercise_data["questions"]):
+    # Show popup message when all questions are answered
+    st.info("🎉 Congratulations! You've completed all the questions!")
+
+    # Ask if the user wants to reload and get a fresh set of questions
+    reload_button = st.button("Reload Page for New Set of Questions")
+
+    if reload_button:
+        # Trigger a full page reload (not just rerun)
+        streamlit_js_eval(js_expressions="parent.window.location.reload()")
