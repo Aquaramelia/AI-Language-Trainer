@@ -22,9 +22,9 @@ def generate_verb_exercise():
     elif len(difficult_verbs) < limit:
         random_verbs = get_random_verbs(limit - len(difficult_verbs))
         difficult_verbs = difficult_verbs + random_verbs
-
+    unique_verbs = [dict(t) for t in {tuple(d.items()) for d in difficult_verbs}]
     # Format verbs for LLM prompt
-    verb_list = "\n".join([f"{n['id']}: {n['infinitive']} - {n['past_simple']} - {n['past_participle']}" for n in difficult_verbs])
+    verb_list = "\n".join([f"{n['id']}: {n['infinitive']} - {n['past_simple']} - {n['past_participle']}" for n in unique_verbs])
 
     question_prompt = f"""
     Generate a German verb conjugation exercise. Use the following irregular verbs:
@@ -82,9 +82,9 @@ def generate_noun_exercise():
     elif len(difficult_nouns) < limit:
         random_nouns = get_random_nouns(limit - len(difficult_nouns))
         difficult_nouns = difficult_nouns + random_nouns
-
+    unique_nouns = [dict(t) for t in {tuple(d.items()) for d in difficult_nouns}]
     # Format nouns for LLM prompt
-    noun_list = "\n".join([f"{n['id']}: {n['word']} - {n['article']}" for n in difficult_nouns])
+    noun_list = "\n".join([f"{n['id']}: {n['word']} - {n['article']}" for n in unique_nouns])
 
     question_prompt = f"""
     Generate a German noun article exercise. Use the following nouns:
