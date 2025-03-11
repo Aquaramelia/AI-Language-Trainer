@@ -1,8 +1,8 @@
 import random
 from sqlalchemy import func
 from database.db_models_exercises import Noun, NounExercise, Verb, VerbExercise
-from database.db_models_general import SessionLocal, Vocabulary, User, Exercise
-        
+from database.db_models_general import Base, SessionLocal, Vocabulary, User, Exercise
+
 def log_exercise(user_id, word_id, correct):
     """Logs the user's answer and updates difficulty for incorrect responses."""
     session = SessionLocal()
@@ -57,13 +57,26 @@ def get_difficult_words(user_id, limit=5, difficulty_threshold=1):
     return words
 
 
-def get_random_words(limit=5):
+def get_random_words(limit):
+    return __get_random_from_table(Vocabulary, limit=limit)
+
+
+def get_random_nouns(limit):
+    return __get_random_from_table(Noun, limit=limit)
+
+
+def get_random_verbs(limit):
+    return __get_random_from_table(Verb, limit=limit)
+
+
+def __get_random_from_table(table, limit=5):
     """Fetch random words if there are no difficult ones."""
     session = SessionLocal()
-    words = session.query(Vocabulary).order_by(
-        func.random()).limit(limit).all()
+    words = session.query(table).order_by(func.random()).limit(limit).all()
     session.close()
-    return words
+
+    # Convert to list of dictionaries while excluding 'exercises'
+    return [{col.name: getattr(word, col.name) for col in table.__table__.columns if col.name != "exercises"} for word in words]
 
 
 def update_difficulty(word_id, correct):
@@ -152,41 +165,12 @@ def get_difficult_nouns(limit=5):
     """Fetches nouns where the user often picks the wrong article."""
     session = SessionLocal()
     nouns = (
-        session.query(Noun.word, Noun.article)
+        session.query(Noun)
         .join(NounExercise)
         .filter(NounExercise.correct == False)
         .limit(limit)
         .all()
     )
     session.close()
-    return nouns
-
-
-if __name__ == "__main__":
-   #  # Add verbs
-   #  add_verb("sehen", "sah", "gesehen")
-   #  add_verb("gehen", "ging", "gegangen")
-
-   #  # Add nouns
-   #  add_noun("Tisch", "der")
-   #  add_noun("Auto", "das")
-   #  add_noun("Blume", "die")
-
-   #  # Log exercises (Simulating mistakes)
-   #  log_verb_exercise(1, 1, False)  # User 1 got 'sehen' wrong
-   #  # User 1 picked the wrong article for 'Auto'
-   #  log_noun_exercise(1, 2, False)
-
-   #  # Fetch problem words
-   #  print("Difficult Verbs:", get_difficult_verbs())
-   #  print("Difficult Nouns:", get_difficult_nouns())
-   # words = get_words_for_exercise(user_id=1, limit=5)
-
-   # for word in words:
-   #    print(f"Word: {word.word}, Difficulty: {word.difficulty}")
-   # Simulating a user's response
-   word_id = 5
-   user_got_it_right = True  # Change to False for wrong answer
-
-   update_difficulty(word_id, user_got_it_right)
-
+    # Convert to list of dictionaries while excluding 'exercises'
+    return [{col.name: getattr(noun, col.name) for col in Noun.__table__.columns if col.name != "exercises"} for noun in nouns]
