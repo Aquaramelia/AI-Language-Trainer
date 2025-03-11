@@ -2,6 +2,8 @@ import streamlit as st
 from database.db_helpers_exercises import log_noun_exercise
 from question_generation import generate_noun_exercise
 
+st.set_page_config(page_title="Noun Article Exercises - AI Language Trainer", page_icon="📖")
+
 USER_ID = 1  # Placeholder for session
 
 if "exercise_data" not in st.session_state:
