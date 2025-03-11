@@ -3,43 +3,55 @@ from google import genai
 import os
 from dotenv import load_dotenv
 
-from database.db_helpers_exercises import get_difficult_nouns, get_difficult_verbs
+from database.db_helpers_exercises import get_difficult_nouns, get_difficult_verbs, get_random_nouns, get_random_verbs, get_random_words
 
 load_dotenv()
 API_KEY = os.environ["API_KEY"]
 
 
 def generate_verb_exercise():
-    """Generates a verb conjugation exercise using the user's weak verbs."""
-    difficult_verbs = get_difficult_verbs(2)  # Get 3 weak verbs
+    """Generates a verb conjugation exercise using the user's weak verbs.
+    If no weak verbs are found, or the weak verbs are fewer than the
+    exercise limit, the rest are filled in with random verbs from the database."""
+    limit = 10
+    difficult_verbs = get_difficult_verbs(limit=limit)  # Get 3 weak verbs
 
     if not difficult_verbs:
-        return "No weak verbs found. Try more exercises!"
+        print("No weak verbs found. Getting random verbs!")
+        difficult_verbs = get_random_verbs(limit=limit)
+    elif len(difficult_verbs) < limit:
+        random_verbs = get_random_verbs(limit - len(difficult_verbs))
+        difficult_verbs = difficult_verbs + random_verbs
 
     # Format verbs for LLM prompt
-    verb_list = "\n".join(
-        [f"{v[0]} - {v[1]} - {v[2]}" for v in difficult_verbs])
+    verb_list = "\n".join([f"{n['id']}: {n['infinitive']} - {n['past_simple']} - {n['past_participle']}" for n in difficult_verbs])
 
     question_prompt = f"""
     Generate a German verb conjugation exercise. Use the following irregular verbs:
 
     {verb_list}
 
-    - Create **one fill-in-the-blank sentence** per verb.
-    - Include the correct answer in a JSON format.
-    - Example output:
-      {{
-          "questions": [
-              {{
-                  "sentence": "Gestern ___ ich einen Film. (sehen)",
-                  "answer": "sah"
-              }},
-              {{
-                  "sentence": "Letzte Woche ___ wir nach Berlin. (gehen)",
-                  "answer": "gingen"
-              }}
-          ]
-      }}
+    - Create fill-in-the-blank questions where the learner types the correct conjugated form of an irregular German verb.
+    - The question format should be:
+        -- (verb infinitive, required tense): Example sentence with blanks where the verb (and auxiliary, if needed) should be.
+    - If an auxiliary verb is necessary (e.g., "habe gesehen"), include blanks for both.
+    - Include the verb ID for tracking.
+    - Provide the answer in valid JSON dictionary format.
+    {{
+        "questions": [
+        {{
+            "verb_id": 1,
+            "question": "gehen, past simple: Gestern ___ ich in den Park.",
+            "answer": "ging"
+        }},
+        {{
+            "verb_id": 2,
+            "question": "sehen, past participle: Ich ___ den Film schon zweimal ___ .",
+            "answer": "habe, gesehen"
+        }}
+        ]
+    }}
+
     """
 
     # Call LLM
@@ -48,18 +60,31 @@ def generate_verb_exercise():
         model="gemini-2.0-flash", contents=question_prompt
     )
 
-    return response.text  # Return JSON-formatted exercises
+    cleaned_response = response.text.strip("```json").strip("```").strip()
+
+    try:
+        exercise_data = json.loads(cleaned_response)
+        return exercise_data  # Now it returns a dictionary
+    except json.JSONDecodeError:
+        return {"message": "Error: Could not parse exercise data."}
 
 
 def generate_noun_exercise():
-    """Generates a noun article exercise using the user's weak nouns."""
-    difficult_nouns = get_difficult_nouns(3)  # Get 3 weak nouns
+    """Generates a noun article exercise using the user's weak nouns.
+    If no weak nouns are found, or the weak nouns are fewer than the
+    exercise limit, the rest are filled in with random nouns from the database."""
+    limit = 10
+    difficult_nouns = get_difficult_nouns(limit=limit)  # Get 3 weak verbs
 
     if not difficult_nouns:
-        return "No weak nouns found. Try more exercises!"
+        print("No weak nouns found. Getting random nouns!")
+        difficult_nouns = get_random_nouns(limit=limit)
+    elif len(difficult_nouns) < limit:
+        random_nouns = get_random_nouns(limit - len(difficult_nouns))
+        difficult_nouns = difficult_nouns + random_nouns
 
     # Format nouns for LLM prompt
-    noun_list = "\n".join([f"{n[0]} - {n[1]}" for n in difficult_nouns])
+    noun_list = "\n".join([f"{n['id']}: {n['word']} - {n['article']}" for n in difficult_nouns])
 
     question_prompt = f"""
     Generate a German noun article exercise. Use the following nouns:
@@ -101,6 +126,3 @@ def generate_noun_exercise():
     except json.JSONDecodeError:
         return {"message": "Error: Could not parse exercise data."}
 
-
-print(generate_verb_exercise())
-print(generate_noun_exercise())
