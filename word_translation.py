@@ -23,7 +23,3 @@ def translate_to_english(word):
 
 def translate_to_german(word):
    return __translate_word(word, "english", "german")
-
-# Example usage
-print(translate_to_english("Haus"))
-print(translate_to_german("house"))
