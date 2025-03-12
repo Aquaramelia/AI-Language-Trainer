@@ -1,25 +1,18 @@
-import requests
+from googletrans import Translator
+from st_helpers import run_async_task
+
+translator = Translator()
 
 
-def __translate_word(word, source_lang, target_lang):
-    """Fetches a translation for a given word."""
-    url = "https://deep-translator-api.azurewebsites.net/google/"  # Example, may require API key
-    params = {
-        "source": source_lang,
-        "target": target_lang,
-        "text": word,
-        "proxies": []
-    }
-    
-    response = requests.post(url, json=params)
+async def translate(text, src, dest):
+    # Directly await the async translation call
+    translation = await translator.translate(text, src=src, dest=dest)
+    return translation.text
 
-    if response.status_code == 200:
-        return response.json().get("translation", "Translation not found")
-    else:
-        return "Error: Unable to fetch translation" + response.text
 
 def translate_to_english(word):
-   return __translate_word(word, "german", "english")
+    return run_async_task(translate, word, "de", "en")
+
 
 def translate_to_german(word):
-   return __translate_word(word, "english", "german")
+    return run_async_task(translate, word, "en", "de")

@@ -9,25 +9,39 @@ st.sidebar.success("Select a page above to start training! 👆")
 # Sidebar interface for translation
 st.sidebar.header("Translation Tool")
 
-# Create a text box for the user to input an unknown word
-en_word_to_translate = st.sidebar.text_input("Enter a word in german:", key="button_en_tranlation", label_visibility="hidden")
+# Define callback functions
+def go_to_translation_english():
+    user_input = st.session_state.get("button_en_translation", "")
+    if user_input:
+        st.session_state.translation_en = translate_to_english(user_input)
 
-# Create a button to trigger the translation
-if st.sidebar.button("English translation"):
-    if en_word_to_translate:
-        en_translation = translate_to_english(en_word_to_translate)
-        st.sidebar.write(f"Translation: {en_translation}")
-    else:
-        st.sidebar.write("Please enter a word to translate.")
-        
+def go_to_translation_german():
+    user_input = st.session_state.get("button_de_translation", "")
+    if user_input:
+        st.session_state.translation_de = translate_to_german(user_input)
 
-# Create a text box for the user to input an unknown word
-de_word_to_translate = st.sidebar.text_input("Enter a word in english:", key="button_de_tranlation", label_visibility="hidden")
+# German -> English Input Box
+st.sidebar.text_input(
+    label="German -> English:",
+    key="button_en_translation",
+    label_visibility="visible",
+    max_chars=50,
+    on_change=go_to_translation_english
+)
 
-# Create a button to trigger the translation
-if st.sidebar.button("German translation"):
-    if de_word_to_translate:
-        de_translation = translate_to_german(de_word_to_translate)
-        st.sidebar.write(f"Translation: {de_translation}")
-    else:
-        st.sidebar.write("Please enter a word to translate.")
+translation_text_en = st.session_state.get("translation_en", "")
+st.sidebar.write(
+    f"Translation: {translation_text_en}" if translation_text_en else "")
+
+# English -> German Input Box
+st.sidebar.text_input(
+    label="English -> German:",
+    key="button_de_translation",
+    label_visibility="visible",
+    max_chars=50,
+    on_change=go_to_translation_german
+)
+
+translation_text_de = st.session_state.get("translation_de", "")
+st.sidebar.write(
+    f"Translation: {translation_text_de}" if translation_text_de else "")
