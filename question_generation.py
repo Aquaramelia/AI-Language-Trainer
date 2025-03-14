@@ -53,20 +53,8 @@ def generate_verb_exercise():
     }}
 
     """
-
-    # Call LLM
-    client = genai.Client(api_key=API_KEY)
-    response = client.models.generate_content(
-        model="gemini-2.0-flash", contents=question_prompt
-    )
-
-    cleaned_response = response.text.strip("```json").strip("```").strip()
-
-    try:
-        exercise_data = json.loads(cleaned_response)
-        return exercise_data  # Now it returns a dictionary
-    except json.JSONDecodeError:
-        return {"message": "Error: Could not parse exercise data."}
+    
+    send_to_llm(question_prompt)
 
 
 def generate_noun_exercise():
@@ -112,11 +100,14 @@ def generate_noun_exercise():
           ]
       }}
     """
+    send_to_llm(question_prompt)
+    
 
-    # Call LLM
+def send_to_llm(prompt):
+   # Call LLM
     client = genai.Client(api_key=API_KEY)
     response = client.models.generate_content(
-        model="gemini-2.0-flash", contents=question_prompt
+        model="gemini-2.0-flash", contents=prompt
     )
     cleaned_response = response.text.strip("```json").strip("```").strip()
 
@@ -125,4 +116,3 @@ def generate_noun_exercise():
         return exercise_data  # Now it returns a dictionary
     except json.JSONDecodeError:
         return {"message": "Error: Could not parse exercise data."}
-
