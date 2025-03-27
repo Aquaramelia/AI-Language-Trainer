@@ -42,19 +42,20 @@ def generate_verb_exercise():
         {{
             "verb_id": 1,
             "question": "gehen, past simple: Gestern ___ ich in den Park.",
-            "answer": "ging"
+            "correct_answer": "ging"
         }},
         {{
             "verb_id": 2,
             "question": "sehen, past participle: Ich ___ den Film schon zweimal ___ .",
-            "answer": "habe, gesehen"
+            "correct_answer": "habe, gesehen"
         }}
         ]
     }}
 
     """
-    
-    send_to_llm(question_prompt)
+
+    response = send_to_llm(question_prompt)
+    return response
 
 
 def generate_noun_exercise():
@@ -100,8 +101,9 @@ def generate_noun_exercise():
           ]
       }}
     """
-    send_to_llm(question_prompt)
-    
+    response = send_to_llm(question_prompt)
+    return response
+
 
 def send_to_llm(prompt):
    # Call LLM
