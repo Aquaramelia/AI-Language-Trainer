@@ -89,14 +89,14 @@ def generate_noun_exercise():
               {{
                   "noun_id": 1,
                   "question": "What is the correct article for 'Auto'?",
-                  "options": ["der", "die", "das"],
-                  "answer": "das"
+                  "choices": ["der", "die", "das"],
+                  "correct_answer": "das"
               }},
               {{
                   "noun_id": 2,
                   "question": "What is the correct article for 'Lampe'?",
-                  "options": ["der", "die", "das"],
-                  "answer": "die"
+                  "choices": ["der", "die", "das"],
+                  "correct_answer": "die"
               }}
           ]
       }}
