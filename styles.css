@@ -164,3 +164,12 @@ section[data-testid="stSidebar"] div {
 section[data-testid="stSidebar"] h1 {
    text-decoration: underline !important;
 }
+
+/* Badge styles */
+.is-badge {
+   font-size: 90% !important;  /* Affects the text "ausloten" */
+}
+
+.is-badge span[role="img"] {
+   font-size: 100% !important;  /* Affects the Material Symbols "start" icon */
+}

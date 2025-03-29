@@ -67,6 +67,10 @@ def ask_question(question_data, idx):
     form = st.form(f"verb_exercise_form_{idx}")
     emoji = st.session_state.icons[idx]
     form.write(f"{emoji} {question_data['question']}")
+    form.markdown(
+        f":violet-badge[:material/start: {question_data['infinitive']}] :orange-badge[:material/star: {question_data['verb_tense']}]"
+    )
+
     correct_answer = question_data["correct_answer"]
     # Disable all buttons if an answer is selected
     if st.session_state.answers[idx]:

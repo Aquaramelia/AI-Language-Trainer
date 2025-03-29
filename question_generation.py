@@ -38,18 +38,24 @@ def generate_verb_exercise():
     - The question format should be:
         -- (verb infinitive, required tense): Example sentence with blanks where the verb (and auxiliary, if needed) should be.
     - If an auxiliary verb is necessary (e.g., "habe gesehen"), include blanks for both.
+    - Feel free to use a variety of grammatical tenses to widen the lerner's knowledge.
+    - Feel free to use more advanced sentences.
     - Include the verb ID for tracking.
     - Provide the answer in valid JSON dictionary format.
     {{
         "questions": [
         {{
             "verb_id": 1,
-            "question": "gehen, past simple: Gestern ___ ich in den Park.",
+            "infinitive: "gehen",
+            "verb_tense": "Präteritum",
+            "question": "Gestern ___ ich in den Park.",
             "correct_answer": "ging"
         }},
         {{
             "verb_id": 2,
-            "question": "sehen, past participle: Ich ___ den Film schon zweimal ___ .",
+            "infinitive": "sehen",
+            "verb_tense": "Perfekt",
+            "question": "Ich ___ den Film schon zweimal ___ .",
             "correct_answer": "habe, gesehen"
         }}
         ]
