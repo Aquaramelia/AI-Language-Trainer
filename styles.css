@@ -1,5 +1,10 @@
+/* Import Google Fonts */
+
 @import url("https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@300;400;600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@200;300;400&display=swap");
+
+
+/* General content styles */
 
 body,
 h2,
@@ -8,10 +13,6 @@ p,
 div {
   font-family: "Balsamiq Sans", sans-serif;
   font-size: 102% !important;
-}
-
-button {
-  font-size: 100% !important;
 }
 
 h1,
@@ -28,6 +29,12 @@ h3 {
   font-weight: normal !important;
 }
 
+h1 a {
+   display: none !important;
+}
+
+/* General alert container styles */
+
 details .stAlert {
   font-size: 80% !important;
 }
@@ -40,63 +47,6 @@ details .stAlert {
 
 details .stAlert .stAlertContainer {
   text-align: left !important;
-}
-
-.disclaimer {
-  font-size: 60% !important;
-  font-style: italic;
-  color: grey;
-  text-align: center !important;
-}
-
-.stForm,
-[class*="st-key-question-container-"]  {
-  font-size: 90% !important;
-  background-color: #231d378f !important;
-}
-
-[class*="st-key-question-container-"] {
-   border-radius: 15px !important;
-   padding: 10px;
-}
-
-.st-bb {
-  font-size: 90% !important;
-  background-color: rgb(52, 41, 107) !important;
-  color-scheme: light !important;
-}
-
-input p {
-  font-size: 80% !important;
-}
-
-.st-emotion-cache-15g7z8s:hover {
-  background-color: rgb(68, 77, 102);
-}
-
-.stExpander:hover summary {
-   color: rgb(151, 154, 221);
-}
-
-.stExpander:hover svg {
-   fill: rgb(151, 154, 221);
-}
-
-.st-emotion-cache-1vwew83 {
-   background-color: rgb(16, 0, 51);
-}
-
-.st-emotion-cache-1vwew83:hover {
-	border-color: rgb(116, 255, 242);
-	color: rgb(254, 238, 149);
-}
-
-h1 a {
-   display: none !important;
-}
-
-.st-bw {
-	color: rgb(245, 255, 196);
 }
 
 div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentError"]) {
@@ -114,9 +64,86 @@ div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
    color: white !important;
 }
 
+/* Disclaimer style */
+
+.disclaimer {
+  font-size: 60% !important;
+  font-style: italic;
+  color: grey;
+  text-align: center !important;
+}
+
+/* Styles for questions in forms and in containers */
+
+.stForm,
+[class*="st-key-question-container-"]  {
+  font-size: 90% !important;
+  background-color: #231d378f !important;
+}
+
+[class*="st-key-question-container-"] {
+   border-radius: 15px !important;
+   padding: 10px;
+}
+
+/* Button styles */
+
+button {
+  font-size: 100% !important;
+}
+
 .st-emotion-cache-1vwew83:disabled, .st-emotion-cache-1vwew83:disabled:hover, .st-emotion-cache-1vwew83:disabled:active {
    background-color: #04030b42 !important;
 }
+
+.st-emotion-cache-15g7z8s:hover {
+  background-color: rgb(68, 77, 102);
+}
+
+/* "Press Enter to submit form" text */
+
+.st-emotion-cache-0.eva3uk20 {
+   font-size: 80% !important;
+}
+
+/* Input element styles */
+
+input p {
+  font-size: 80% !important;
+}
+
+.st-bw {
+	color: rgb(245, 255, 196);
+}
+
+.st-bb {
+  font-size: 90% !important;
+  background-color: rgb(52, 41, 107) !important;
+  color-scheme: light !important;
+}
+
+/* Expander element styles */
+
+.stExpander:hover summary {
+   color: rgb(151, 154, 221);
+}
+
+.stExpander:hover svg {
+   fill: rgb(151, 154, 221);
+}
+
+/* Submit button styles */
+
+.st-emotion-cache-1vwew83 {
+   background-color: rgb(16, 0, 51);
+}
+
+.st-emotion-cache-1vwew83:hover {
+	border-color: rgb(116, 255, 242);
+	color: rgb(254, 238, 149);
+}
+
+/* Sidebar styles */
 
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] h1,
