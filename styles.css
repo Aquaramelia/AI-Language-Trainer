@@ -78,7 +78,7 @@ div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
 .stForm,
 [class*="st-key-question-container-"]  {
   font-size: 90% !important;
-  background-color: #231d378f !important;
+  background-color: #0900268f !important;
 }
 
 [class*="st-key-question-container-"] {
@@ -98,6 +98,13 @@ button {
 
 .st-emotion-cache-15g7z8s:hover {
   background-color: rgb(68, 77, 102);
+}
+
+.st-emotion-cache-1vwew83:disabled, .st-emotion-cache-1vwew83:disabled:hover, .st-emotion-cache-1vwew83:disabled:active {
+	border-color: rgba(137, 154, 255, 0.56);
+	background-color: transparent;
+	color: rgba(255, 255, 255, 0.49);
+	cursor: not-allowed;
 }
 
 /* "Press Enter to submit form" text */
