@@ -49,9 +49,15 @@ details .stAlert .stAlertContainer {
   text-align: center !important;
 }
 
-.stForm {
+.stForm,
+[class*="st-key-question-container-"]  {
   font-size: 90% !important;
   background-color: #231d378f !important;
+}
+
+[class*="st-key-question-container-"] {
+   border-radius: 15px !important;
+   padding: 10px;
 }
 
 .st-bb {
@@ -93,15 +99,17 @@ h1 a {
 	color: rgb(245, 255, 196);
 }
 
-.st-do {
+div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentError"]) {
 	background-color: rgba(255, 27, 155, 0.12) !important;
+   color: white !important;
 }
 
-.st-at {
+div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentSuccess"]) {
 	background-color: rgba(61, 213, 192, 0.2) !important;
+   color: white !important;
 }
 
-.st-cp {
+div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
 	background-color: rgba(75, 196, 255, 0.31) !important;
    color: white !important;
 }
