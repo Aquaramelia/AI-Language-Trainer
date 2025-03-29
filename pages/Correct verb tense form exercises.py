@@ -122,10 +122,10 @@ def ask_question(question_data, idx):
         question_answer = correct_answer
 
         if st.session_state.is_correct[idx] is True:
-            form.success(f"Correct! You answered: {selected_option}.")
+            form.success(f"Correct! You answered: :green[{selected_option}].")
         else:
             form.error(
-                f"Wrong! You selected {selected_option}, \n but the correct answer is {question_answer}."
+                f"Wrong! You selected :red[{selected_option}], \n but the correct answer is :green[{question_answer}]."
             )
                 
     st.markdown("<br><br>", unsafe_allow_html=True)
