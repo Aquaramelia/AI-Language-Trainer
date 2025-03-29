@@ -13,6 +13,7 @@ set_background()
 load_css()
 st.title("Verb Tense Exercises")
 st.header("Complete the following sentences with the verb in the given tense form.")
+st.divider()
 
 def refresh_test():
     # Reset only necessary session state variables

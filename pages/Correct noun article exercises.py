@@ -13,6 +13,7 @@ set_background()
 load_css()
 st.title("Noun Article Exercises")
 st.header("Practice choosing the correct German articles: *der, die, das*.")
+st.divider()
 
 def refresh_test():
     # Reset only necessary session state variables
