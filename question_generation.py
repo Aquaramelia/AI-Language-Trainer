@@ -14,17 +14,20 @@ def generate_verb_exercise():
     If no weak verbs are found, or the weak verbs are fewer than the
     exercise limit, the rest are filled in with random verbs from the database."""
     limit = 10
-    difficult_verbs = get_difficult_verbs(limit=limit)  # Get 3 weak verbs
-
+    difficult_verbs = get_difficult_verbs(limit=limit)
     if not difficult_verbs:
         print("No weak verbs found. Getting random verbs!")
         difficult_verbs = get_random_verbs(limit=limit)
-    elif len(difficult_verbs) < limit:
-        random_verbs = get_random_verbs(limit - len(difficult_verbs))
-        difficult_verbs = difficult_verbs + random_verbs
-    unique_verbs = [dict(t) for t in {tuple(d.items()) for d in difficult_verbs}]
+    else:
+        difficult_verbs = list(set(difficult_verbs))
+        if len(difficult_verbs) < limit:
+            random_verbs = get_random_verbs(limit - len(difficult_verbs))
+            difficult_verbs = difficult_verbs + random_verbs
+    unique_verbs = list(set(difficult_verbs))
     # Format verbs for LLM prompt
-    verb_list = "\n".join([f"{n['id']}: {n['infinitive']} - {n['past_simple']} - {n['past_participle']}" for n in unique_verbs])
+    verb_list = "\n".join([f"{idx}: {infinitive} - {past_simple} - {past_participle}" 
+                           for idx, (infinitive, past_simple, past_participle) in enumerate(unique_verbs, start=1)])
+
 
     question_prompt = f"""
     Generate a German verb conjugation exercise. Use the following irregular verbs:
