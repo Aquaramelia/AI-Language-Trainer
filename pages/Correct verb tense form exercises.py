@@ -1,4 +1,5 @@
 import random
+import re
 import time
 import streamlit as st
 from database.db_helpers_exercises import log_verb_exercise
@@ -93,15 +94,20 @@ def ask_question(question_data, idx):
         placeholder="Write your answer here."
     )
     
+    cleaned_input = user_input.strip()
+    cleaned_input = re.sub(r",\s*", " ", cleaned_input)  # Replace commas and optional spaces with a space
+        
     form_submit_button = form.form_submit_button(label="Submit answer", disabled=disabled, use_container_width=True)
     
     if form_submit_button:
 
         # Update session state with selected answer
-        st.session_state.answers[idx] = user_input.strip()
+        st.session_state.answers[idx] = cleaned_input
 
         # Check if the selected option corresponds to the correct answer's letter
-        is_correct_answer = correct_answer == user_input.strip()
+        cleaned_correct_answer = correct_answer.strip()
+        cleaned_correct_answer = re.sub(r",\s*", " ", cleaned_correct_answer) # Clean the answer, too
+        is_correct_answer = cleaned_correct_answer == cleaned_input
         st.session_state.is_correct[idx] = is_correct_answer
         if is_correct_answer:
             st.toast(body="Correct answer!", icon="✅")
