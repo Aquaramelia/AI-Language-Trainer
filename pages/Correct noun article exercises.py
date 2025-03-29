@@ -124,10 +124,8 @@ def ask_question(question_data, idx):
                     f"Wrong! You selected :red[{selected_option}], \n but the correct answer is :green[{question_answer}]."
                 )
                 
-    st.markdown("<br><br>", unsafe_allow_html=True)
 
-
-columns = st.columns([1, 0.2, 1])
+columns = st.columns([1, 0.1, 1])
 left_col, spacer, right_col = columns
 
 shuffled_emojis = question_emojis.copy()
@@ -141,6 +139,7 @@ for idx, question in enumerate(questions):
     with left_col if idx % 2 == 0 else right_col:
         ask_question(question, idx)
 
+st.divider()
 # Display the final score
 info_text = f"You have scored: {st.session_state.score} out of {len(questions)}"
 
