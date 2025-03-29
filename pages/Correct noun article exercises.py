@@ -3,13 +3,17 @@ import time
 import streamlit as st
 from database.db_helpers_exercises import log_noun_exercise
 from question_generation import generate_noun_exercise
+from streamlit_helpers import set_background, load_css
 
 st.set_page_config(
     page_title="Noun Article Exercises - AI Language Trainer", 
     page_icon="📖",
     layout="wide")
+set_background()
+load_css()
 st.title("Noun Article Exercises")
-st.write("Practice choosing the correct German articles: *der, die, das*.")
+st.header("Practice choosing the correct German articles: *der, die, das*.")
+st.divider()
 
 def refresh_test():
     # Reset only necessary session state variables
@@ -61,70 +65,67 @@ question_emojis = ["❓", "🔎", "🧠", "🏆", "📚", "🎯", "💡"]
 choices_colors = [":violet", ":orange", ":blue"]
 
 def ask_question(question_data, idx):
-    emoji = st.session_state.icons[idx]
-    st.write(f"{emoji} {question_data['question']}")
-    choices = question_data["choices"]
-    correct_answer = question_data["correct_answer"]
-    print(st.session_state.answers)
-    # Disable all buttons if an answer is selected
-    if st.session_state.answers[idx]:
-        st.session_state.disabled[idx] = True
+    with st.container(
+        key=f"question-container-{idx}"):
+        emoji = st.session_state.icons[idx]
+        st.write(f"{emoji} {question_data['question']}")
+        choices = question_data["choices"]
+        correct_answer = question_data["correct_answer"]
+        # Disable all buttons if an answer is selected
+        if st.session_state.answers[idx]:
+            st.session_state.disabled[idx] = True
 
-    columns = st.columns(3)
-    # Display answer buttons
-    for i, option in enumerate(choices):
-        button_key = f"question_{idx}_{i}"
+        columns = st.columns(3)
+        # Display answer buttons
+        for i, option in enumerate(choices):
+            button_key = f"question_{idx}_{i}"
 
-        # If the question is disabled, disable all buttons
-        disabled = st.session_state.disabled[idx] or correct_answer == st.session_state.answers[idx]
+            # If the question is disabled, disable all buttons
+            disabled = st.session_state.disabled[idx] or correct_answer == st.session_state.answers[idx]
 
-        button_text = f"{choices_colors[i]}[⟡] {option}"
-        col = columns[i % 3]
-        with col:
-            if st.button(button_text, key=button_key, disabled=disabled, use_container_width=True):
+            button_text = f"{choices_colors[i]}[⟡] {option}"
+            col = columns[i % 3]
+            with col:
+                if st.button(button_text, key=button_key, disabled=disabled, use_container_width=True):
 
-                # Update session state with selected answer
-                st.session_state.answers[idx] = option
+                    # Update session state with selected answer
+                    st.session_state.answers[idx] = option
 
-                # Check if the selected option corresponds to the correct answer's letter
-                is_correct_answer = correct_answer == option
-                st.session_state.is_correct[idx] = is_correct_answer
-                if is_correct_answer:
-                    st.toast(body="Correct answer!", icon="✅")
-                    time.sleep(0.3)
-                    st.session_state.score += 1
-                    # TODO: track_progress(question_id=question_data.get("id"), is_correct=True)
+                    # Check if the selected option corresponds to the correct answer's letter
+                    is_correct_answer = correct_answer == option
+                    st.session_state.is_correct[idx] = is_correct_answer
+                    if is_correct_answer:
+                        st.toast(body="Correct answer!", icon="✅")
+                        time.sleep(0.3)
+                        st.session_state.score += 1
+                        # TODO: track_progress(question_id=question_data.get("id"), is_correct=True)
 
-                else:
-                    st.toast(body="Wrong answer", icon="❗")
-                    time.sleep(0.3)
-                    # TODO: track_progress(question_id=question_data.get("id"), is_correct=False)
+                    else:
+                        st.toast(body="Wrong answer", icon="❗")
+                        time.sleep(0.3)
+                        # TODO: track_progress(question_id=question_data.get("id"), is_correct=False)
 
-                # Disable further answers for this question
-                st.session_state.disabled[idx] = True
-                
-                # Log the response without querying the database
-                log_noun_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
-                st.rerun()
+                    # Disable further answers for this question
+                    st.session_state.disabled[idx] = True
+                    
+                    # Log the response without querying the database
+                    log_noun_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
+                    st.rerun()
 
-    # Display feedback message after answering
-    if st.session_state.is_correct[idx] is not None:
-        selected_option = st.session_state.answers[idx]
-        question_answer = correct_answer
+        # Display feedback message after answering
+        if st.session_state.is_correct[idx] is not None:
+            selected_option = st.session_state.answers[idx]
+            question_answer = correct_answer
 
-        col1, col2, col3 = st.columns([1, 4, 1])
-        with col2:
             if st.session_state.is_correct[idx] is True:
-                st.success(f"Correct! You answered: {selected_option}.")
+                st.success(f"Correct! You answered: :green[{selected_option}].")
             else:
                 st.error(
-                    f"Wrong! You selected {selected_option}, \n but the correct answer is {question_answer}."
+                    f"Wrong! You selected :red[{selected_option}], \n but the correct answer is :green[{question_answer}]."
                 )
                 
-    st.markdown("<br><br>", unsafe_allow_html=True)
 
-
-columns = st.columns([1, 0.2, 1])
+columns = st.columns([1, 0.1, 1])
 left_col, spacer, right_col = columns
 
 shuffled_emojis = question_emojis.copy()
@@ -138,6 +139,7 @@ for idx, question in enumerate(questions):
     with left_col if idx % 2 == 0 else right_col:
         ask_question(question, idx)
 
+st.divider()
 # Display the final score
 info_text = f"You have scored: {st.session_state.score} out of {len(questions)}"
 

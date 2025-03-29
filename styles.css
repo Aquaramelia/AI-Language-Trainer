@@ -1,0 +1,166 @@
+/* Import Google Fonts */
+
+@import url("https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@300;400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@200;300;400&display=swap");
+
+
+/* General content styles */
+
+body,
+h2,
+h3,
+p,
+div {
+  font-family: "Balsamiq Sans", sans-serif;
+  font-size: 102% !important;
+}
+
+h1,
+title {
+  text-align: center !important;
+  font-family: "Pixelify Sans" !important;
+  font-weight: 400 !important;
+}
+
+h2, 
+h3 {
+  text-align: center !important;
+  font-family: "Balsamiq Sans", sans-serif !important;
+  font-weight: normal !important;
+}
+
+h1 a {
+   display: none !important;
+}
+
+/* General alert container styles */
+
+details .stAlert {
+  font-size: 80% !important;
+}
+
+.stAlertContainer {
+  font-size: 90% !important;
+  text-align: center !important;
+  padding: 0.4rem 0.75rem !important;
+}
+
+details .stAlert .stAlertContainer {
+  text-align: left !important;
+}
+
+div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentError"]) {
+	background-color: rgba(255, 27, 155, 0.12) !important;
+   color: white !important;
+}
+
+div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentSuccess"]) {
+	background-color: rgba(61, 213, 192, 0.2) !important;
+   color: white !important;
+}
+
+div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
+	background-color: rgba(75, 196, 255, 0.31) !important;
+   color: white !important;
+}
+
+/* Disclaimer style */
+
+.disclaimer {
+  font-size: 60% !important;
+  font-style: italic;
+  color: grey;
+  text-align: center !important;
+}
+
+/* Styles for questions in forms and in containers */
+
+.stForm,
+[class*="st-key-question-container-"]  {
+  font-size: 90% !important;
+  background-color: #0900268f !important;
+}
+
+[class*="st-key-question-container-"] {
+   border-radius: 15px !important;
+   padding: 10px;
+}
+
+/* Button styles */
+
+button {
+  font-size: 100% !important;
+}
+
+.st-emotion-cache-1vwew83:disabled, .st-emotion-cache-1vwew83:disabled:hover, .st-emotion-cache-1vwew83:disabled:active {
+   background-color: #04030b42 !important;
+}
+
+.st-emotion-cache-15g7z8s:hover {
+  background-color: rgb(68, 77, 102);
+}
+
+.st-emotion-cache-1vwew83:disabled, .st-emotion-cache-1vwew83:disabled:hover, .st-emotion-cache-1vwew83:disabled:active {
+	border-color: rgba(137, 154, 255, 0.56);
+	background-color: transparent;
+	color: rgba(255, 255, 255, 0.49);
+	cursor: not-allowed;
+}
+
+/* "Press Enter to submit form" text */
+
+.st-emotion-cache-0.eva3uk20 {
+   font-size: 80% !important;
+}
+
+/* Input element styles */
+
+input p {
+  font-size: 80% !important;
+}
+
+.st-bw {
+	color: rgb(245, 255, 196);
+}
+
+.st-bb {
+  font-size: 90% !important;
+  background-color: rgb(52, 41, 107) !important;
+  color-scheme: light !important;
+}
+
+/* Expander element styles */
+
+.stExpander:hover summary {
+   color: rgb(151, 154, 221);
+}
+
+.stExpander:hover svg {
+   fill: rgb(151, 154, 221);
+}
+
+/* Submit button styles */
+
+.st-emotion-cache-1vwew83 {
+   background-color: rgb(16, 0, 51);
+}
+
+.st-emotion-cache-1vwew83:hover {
+	border-color: rgb(116, 255, 242);
+	color: rgb(254, 238, 149);
+}
+
+/* Sidebar styles */
+
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] st-emotion-cache-j7qwjs,
+section[data-testid="stSidebar"] div {
+   font-family: "Pixelify Sans" !important;
+   text-align: left !important;
+}
+
+section[data-testid="stSidebar"] h1 {
+   text-decoration: underline !important;
+}

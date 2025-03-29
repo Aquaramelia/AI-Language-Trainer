@@ -3,13 +3,17 @@ import time
 import streamlit as st
 from database.db_helpers_exercises import log_verb_exercise
 from question_generation import generate_verb_exercise
+from streamlit_helpers import load_css, set_background
 
 st.set_page_config(
     page_title="Verb Tense Exercises - AI Language Trainer", 
     page_icon="📖",
     layout="wide")
+set_background()
+load_css()
 st.title("Verb Tense Exercises")
-st.write("Complete the following sentences with the verb in the given tense form.")
+st.header("Complete the following sentences with the verb in the given tense form.")
+st.divider()
 
 def refresh_test():
     # Reset only necessary session state variables
@@ -119,16 +123,14 @@ def ask_question(question_data, idx):
         question_answer = correct_answer
 
         if st.session_state.is_correct[idx] is True:
-            form.success(f"Correct! You answered: {selected_option}.")
+            form.success(f"Correct! You answered: :green[{selected_option}].")
         else:
             form.error(
-                f"Wrong! You selected {selected_option}, \n but the correct answer is {question_answer}."
+                f"Wrong! You selected :red[{selected_option}], \n but the correct answer is :green[{question_answer}]."
             )
-                
-    st.markdown("<br><br>", unsafe_allow_html=True)
 
 
-columns = st.columns([1, 0.2, 1])
+columns = st.columns([1, 0.1, 1])
 left_col, spacer, right_col = columns
 
 shuffled_emojis = question_emojis.copy()
@@ -142,6 +144,7 @@ for idx, question in enumerate(questions):
     with left_col if idx % 2 == 0 else right_col:
         ask_question(question, idx)
 
+st.divider()
 # Display the final score
 info_text = f"You have scored: {st.session_state.score} out of {len(questions)}"
 
