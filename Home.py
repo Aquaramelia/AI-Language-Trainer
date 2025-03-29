@@ -7,6 +7,9 @@ set_background()
 load_css()
 st.title("Welcome to the AI Language Trainer!")
 
+if "session_mode" not in st.session_state or st.session_state.session_mode != "home":
+    st.session_state.session_mode = "home"
+
 st.sidebar.success("Select a page above to start training! 👆")
 
 # Sidebar interface for translation

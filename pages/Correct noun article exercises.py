@@ -1,3 +1,4 @@
+import json
 import random
 import time
 import streamlit as st
@@ -29,6 +30,10 @@ def refresh_test():
     st.rerun()
     
 USER_ID = 1  # Placeholder for session
+
+if "session_mode" not in st.session_state or st.session_state.session_mode != "noun_exercises":
+    st.session_state.session_mode = "noun_exercises"
+    refresh_test()
 
 if "questions" not in st.session_state:
     # Call the LLM once and store the result

@@ -31,6 +31,10 @@ def refresh_test():
     
 USER_ID = 1  # Placeholder for session
 
+if "session_mode" not in st.session_state or st.session_state.session_mode != "verb_exercises":
+    st.session_state.session_mode = "verb_exercises"
+    refresh_test()
+
 if "questions" not in st.session_state:
     # Call the LLM once and store the result
     st.session_state.questions = generate_verb_exercise()
