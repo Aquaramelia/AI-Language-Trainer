@@ -1,8 +1,11 @@
 import streamlit as st
+from streamlit_helpers import load_css, set_background
 from word_translation import translate_to_english, translate_to_german
 
-st.set_page_config(page_title="Home - AI Language Trainer", page_icon="📖")
-st.title("Welcome to the Language Trainer! 🇩🇪")
+st.set_page_config(page_title="Home - AI Language Trainer", page_icon="📖", layout="wide")
+set_background()
+load_css()
+st.title("Welcome to the AI Language Trainer!")
 
 st.sidebar.success("Select a page above to start training! 👆")
 

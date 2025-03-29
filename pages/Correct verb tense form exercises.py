@@ -3,13 +3,16 @@ import time
 import streamlit as st
 from database.db_helpers_exercises import log_verb_exercise
 from question_generation import generate_verb_exercise
+from streamlit_helpers import load_css, set_background
 
 st.set_page_config(
     page_title="Verb Tense Exercises - AI Language Trainer", 
     page_icon="📖",
     layout="wide")
+set_background()
+load_css()
 st.title("Verb Tense Exercises")
-st.write("Complete the following sentences with the verb in the given tense form.")
+st.header("Complete the following sentences with the verb in the given tense form.")
 
 def refresh_test():
     # Reset only necessary session state variables

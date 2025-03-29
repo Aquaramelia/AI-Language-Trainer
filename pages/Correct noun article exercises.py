@@ -3,11 +3,14 @@ import time
 import streamlit as st
 from database.db_helpers_exercises import log_noun_exercise
 from question_generation import generate_noun_exercise
+from streamlit_helpers import set_background, load_css
 
 st.set_page_config(
     page_title="Noun Article Exercises - AI Language Trainer", 
     page_icon="📖",
     layout="wide")
+set_background()
+load_css()
 st.title("Noun Article Exercises")
 st.write("Practice choosing the correct German articles: *der, die, das*.")
 
@@ -63,6 +66,7 @@ choices_colors = [":violet", ":orange", ":blue"]
 def ask_question(question_data, idx):
     emoji = st.session_state.icons[idx]
     st.write(f"{emoji} {question_data['question']}")
+    print(str(question_data))
     choices = question_data["choices"]
     correct_answer = question_data["correct_answer"]
     print(st.session_state.answers)
