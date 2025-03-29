@@ -66,7 +66,9 @@ def get_random_nouns(limit):
 
 
 def get_random_verbs(limit):
-    return __get_random_from_table(Verb, limit=limit)
+    retrieved_verbs =  __get_random_from_table(Verb, limit=limit)
+    if retrieved_verbs:
+        return [(v["infinitive"], v["past_simple"], v["past_participle"]) for v in retrieved_verbs]
 
 
 def __get_random_from_table(table, limit=5):

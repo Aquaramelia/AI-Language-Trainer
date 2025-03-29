@@ -14,17 +14,20 @@ def generate_verb_exercise():
     If no weak verbs are found, or the weak verbs are fewer than the
     exercise limit, the rest are filled in with random verbs from the database."""
     limit = 10
-    difficult_verbs = get_difficult_verbs(limit=limit)  # Get 3 weak verbs
-
+    difficult_verbs = get_difficult_verbs(limit=limit)
     if not difficult_verbs:
         print("No weak verbs found. Getting random verbs!")
         difficult_verbs = get_random_verbs(limit=limit)
-    elif len(difficult_verbs) < limit:
-        random_verbs = get_random_verbs(limit - len(difficult_verbs))
-        difficult_verbs = difficult_verbs + random_verbs
-    unique_verbs = [dict(t) for t in {tuple(d.items()) for d in difficult_verbs}]
+    else:
+        difficult_verbs = list(set(difficult_verbs))
+        if len(difficult_verbs) < limit:
+            random_verbs = get_random_verbs(limit - len(difficult_verbs))
+            difficult_verbs = difficult_verbs + random_verbs
+    unique_verbs = list(set(difficult_verbs))
     # Format verbs for LLM prompt
-    verb_list = "\n".join([f"{n['id']}: {n['infinitive']} - {n['past_simple']} - {n['past_participle']}" for n in unique_verbs])
+    verb_list = "\n".join([f"{idx}: {infinitive} - {past_simple} - {past_participle}" 
+                           for idx, (infinitive, past_simple, past_participle) in enumerate(unique_verbs, start=1)])
+
 
     question_prompt = f"""
     Generate a German verb conjugation exercise. Use the following irregular verbs:
@@ -42,19 +45,20 @@ def generate_verb_exercise():
         {{
             "verb_id": 1,
             "question": "gehen, past simple: Gestern ___ ich in den Park.",
-            "answer": "ging"
+            "correct_answer": "ging"
         }},
         {{
             "verb_id": 2,
             "question": "sehen, past participle: Ich ___ den Film schon zweimal ___ .",
-            "answer": "habe, gesehen"
+            "correct_answer": "habe, gesehen"
         }}
         ]
     }}
 
     """
-    
-    send_to_llm(question_prompt)
+
+    response = send_to_llm(question_prompt)
+    return response
 
 
 def generate_noun_exercise():
@@ -88,20 +92,21 @@ def generate_noun_exercise():
               {{
                   "noun_id": 1,
                   "question": "What is the correct article for 'Auto'?",
-                  "options": ["der", "die", "das"],
-                  "answer": "das"
+                  "choices": ["der", "die", "das"],
+                  "correct_answer": "das"
               }},
               {{
                   "noun_id": 2,
                   "question": "What is the correct article for 'Lampe'?",
-                  "options": ["der", "die", "das"],
-                  "answer": "die"
+                  "choices": ["der", "die", "das"],
+                  "correct_answer": "die"
               }}
           ]
       }}
     """
-    send_to_llm(question_prompt)
-    
+    response = send_to_llm(question_prompt)
+    return response
+
 
 def send_to_llm(prompt):
    # Call LLM
