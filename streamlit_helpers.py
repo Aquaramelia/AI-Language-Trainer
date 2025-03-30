@@ -24,3 +24,12 @@ def load_css(css_file_name="styles.css"):
     with open(css_file_name, "r") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+        
+def complete_sentence(question_data):
+    """Fills in the blanks of a sentence with the correct answers."""
+    sentence = question_data["question"]
+    answers = question_data["correct_answer"].split(", ")
+
+    # Replace the blanks with the correct answers
+    completed_sentence = sentence.replace("___", "{}").format(*answers)
+    return completed_sentence
