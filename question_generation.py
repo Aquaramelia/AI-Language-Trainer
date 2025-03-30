@@ -167,6 +167,7 @@ def generate_noun_irregular_article_exercise(limit=10):
         
         question = {
             "noun_id": noun["id"],
+            "noun": noun["word"],
             "question": f"What is the correct article for '{noun['word']}'?",
             "choices": choices,
             "correct_answer": correct_article

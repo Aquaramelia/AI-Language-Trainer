@@ -5,6 +5,7 @@ import streamlit as st
 from database.db_helpers_exercises import log_noun_irregular_article_exercise, log_noun_regular_article_exercise
 from question_generation import generate_noun_irregular_article_exercise, generate_noun_regular_article_exercise
 from streamlit_helpers import set_background, load_css
+from word_translation import translate_to_english
 
 st.set_page_config(
     page_title="Noun Article Exercises - AI Language Trainer", 
@@ -81,6 +82,9 @@ if "answers" not in st.session_state:
 if "disabled" not in st.session_state:
     st.session_state.disabled = {idx: None for idx in range(len(questions))}
 
+if "translation" not in st.session_state:
+    st.session_state.translation = {idx: None for idx in range(len(questions))}
+
 if "icons" not in st.session_state:
     st.session_state.icons = {}
     
@@ -98,7 +102,24 @@ def ask_question(question_data, idx):
     with st.container(
         key=f"question-container-{idx}"):
         emoji = st.session_state.icons[idx]
-        st.write(f"{emoji} {question_data['question']}")
+        
+        col1, col2  = st.columns([7, 1])
+        with col1:
+            st.write(f"{emoji} {question_data['question']}")
+        with col2:
+            
+            translation_disabled = False
+            if st.session_state.translation[idx] is not None:
+                translation_disabled = True
+            if st.button(
+                label=":material/Translate:", 
+                key=f"translate-button-{idx}",
+                disabled=translation_disabled
+            ):
+                translation = translate_to_english(question_data['noun'])
+                if translation:
+                    st.session_state.translation[idx] = translation
+                    st.rerun()
         choices = question_data["choices"]
         correct_answer = question_data["correct_answer"]
         # Disable all buttons if an answer is selected
@@ -144,6 +165,9 @@ def ask_question(question_data, idx):
                         log_noun_regular_article_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
                     log_noun_irregular_article_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
                     st.rerun()
+                    
+        if st.session_state.translation[idx] is not None:
+            st.info(f"Translation: {question_data['noun']} :material/line_end_arrow: {st.session_state.translation[idx]}")
 
         # Display feedback message after answering
         if st.session_state.is_correct[idx] is not None:
