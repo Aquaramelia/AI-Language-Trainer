@@ -11,7 +11,11 @@ async def translate(text, src, dest):
 
 
 def translate_to_english(word):
-    return run_async_task(translate, word, "de", "en")
+    try:
+        result = run_async_task(translate, word, "de", "en")
+        return result
+    except:
+        return None
 
 
 def translate_to_german(word):
