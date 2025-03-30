@@ -173,3 +173,7 @@ section[data-testid="stSidebar"] h1 {
 .is-badge span[role="img"] {
    font-size: 100% !important;  /* Affects the Material Symbols "start" icon */
 }
+
+[class*="st-key-stButtonGroup-container-mode"] {
+   align-items: center !important;
+}
