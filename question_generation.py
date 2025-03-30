@@ -3,7 +3,7 @@ from google import genai
 import os
 from dotenv import load_dotenv
 
-from database.db_helpers_exercises import get_difficult_nouns, get_difficult_verbs, get_random_nouns, get_random_verbs, get_random_words
+from database.db_helpers_exercises import get_difficult_verbs, get_random_nouns_regular_articles, get_random_nouns_irregular_articles, get_random_verbs, get_difficult_regular_articles, get_difficult_irregular_articles
 
 load_dotenv()
 API_KEY = os.environ["API_KEY"]
@@ -67,12 +67,12 @@ def generate_verb_exercise():
     return response
 
 
-def generate_noun_exercise():
+def generate_vocabulary_exercise():
     """Generates a noun article exercise using the user's weak nouns.
     If no weak nouns are found, or the weak nouns are fewer than the
     exercise limit, the rest are filled in with random nouns from the database."""
     limit = 10
-    difficult_nouns = get_difficult_nouns(limit=limit)  # Get 3 weak verbs
+    difficult_nouns = get_difficult_vocabulary(limit=limit)  # Get 3 weak verbs
 
     if not difficult_nouns:
         print("No weak nouns found. Getting random nouns!")
@@ -113,6 +113,67 @@ def generate_noun_exercise():
     response = send_to_llm(question_prompt)
     return response
 
+def generate_noun_regular_article_exercise(limit=10):
+    """Generates a noun article exercise using the user's weak nouns.
+    If no weak nouns are found, or the weak nouns are fewer than the
+    exercise limit, the rest are filled in with random nouns from the database."""
+    difficult_nouns = get_difficult_regular_articles(limit=limit)
+
+    if not difficult_nouns:
+        print("No weak nouns found. Getting random nouns!")
+        difficult_nouns = get_random_nouns_regular_articles(limit=limit)
+    elif len(difficult_nouns) < limit:
+        random_nouns = get_random_nouns_regular_articles(limit - len(difficult_nouns))
+        difficult_nouns = difficult_nouns + random_nouns
+    unique_nouns = [dict(t) for t in {tuple(d.items()) for d in difficult_nouns}]
+    
+    articles = ["der", "die", "das"]
+    
+    questions = []
+    for noun in unique_nouns:
+        correct_article = noun["article"]
+        choices = articles
+        
+        question = {
+            "noun_id": noun["id"],
+            "question": f"What is the correct article for '{noun['word']}'?",
+            "choices": choices,
+            "correct_answer": correct_article
+        }
+        questions.append(question)
+
+    return {"questions": questions}
+
+def generate_noun_irregular_article_exercise(limit=10):
+    """Generates a noun article exercise using the user's weak nouns.
+    If no weak nouns are found, or the weak nouns are fewer than the
+    exercise limit, the rest are filled in with random nouns from the database."""
+    difficult_nouns = get_difficult_irregular_articles(limit=limit)
+
+    if not difficult_nouns:
+        print("No weak nouns found. Getting random nouns!")
+        difficult_nouns = get_random_nouns_irregular_articles(limit=limit)
+    elif len(difficult_nouns) < limit:
+        random_nouns = get_random_nouns_irregular_articles(limit - len(difficult_nouns))
+        difficult_nouns = difficult_nouns + random_nouns
+    unique_nouns = [dict(t) for t in {tuple(d.items()) for d in difficult_nouns}]
+    
+    articles = ["der", "die", "das"]
+    
+    questions = []
+    for noun in unique_nouns:
+        correct_article = noun["article"]
+        choices = articles
+        
+        question = {
+            "noun_id": noun["id"],
+            "question": f"What is the correct article for '{noun['word']}'?",
+            "choices": choices,
+            "correct_answer": correct_article
+        }
+        questions.append(question)
+
+    return {"questions": questions}
 
 def send_to_llm(prompt):
    # Call LLM

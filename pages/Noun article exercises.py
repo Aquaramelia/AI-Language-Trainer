@@ -2,8 +2,8 @@ import json
 import random
 import time
 import streamlit as st
-from database.db_helpers_exercises import log_noun_exercise
-from question_generation import generate_noun_exercise
+from database.db_helpers_exercises import log_noun_irregular_article_exercise, log_noun_regular_article_exercise
+from question_generation import generate_noun_irregular_article_exercise, generate_noun_regular_article_exercise
 from streamlit_helpers import set_background, load_css
 
 st.set_page_config(
@@ -14,11 +14,30 @@ set_background()
 load_css()
 st.title("Noun Article Exercises")
 st.header("Practice choosing the correct German articles: *der, die, das*.")
+
+available_modes = {
+    "Irregular nouns": "noun_irregular_article_exercises", 
+    "Regular nouns": "noun_regular_article_exercises"
+}
+
+mode_container = st.container(key="stButtonGroup-container-mode")
+with mode_container:
+    current_mode = st.segmented_control(
+        label="Exercises with:", 
+        label_visibility="collapsed", 
+        options=list(available_modes.keys()), 
+        default="Irregular nouns",
+        )
+
 st.divider()
 
 def refresh_test():
     # Reset only necessary session state variables
-    st.session_state.questions = generate_noun_exercise()  # Get new questions
+    if "session_mode" in st.session_state:
+        if st.session_state.session_mode == "noun_irregular_article_exercises":
+            st.session_state.questions = generate_noun_irregular_article_exercise()
+        elif st.session_state.session_mode == "noun_regular_article_exercises":
+            st.session_state.questions = generate_noun_regular_article_exercise()
     questions = st.session_state.questions["questions"]
     st.session_state.score = 0
     st.session_state.answers = {idx: None for idx in range(len(questions))}
@@ -30,14 +49,20 @@ def refresh_test():
     st.rerun()
     
 USER_ID = 1  # Placeholder for session
+    
+if "session_mode" not in st.session_state or st.session_state.session_mode not in available_modes.values():
+    st.session_state.session_mode = "noun_irregular_article_exercises"
+    refresh_test()
 
-if "session_mode" not in st.session_state or st.session_state.session_mode != "noun_exercises":
-    st.session_state.session_mode = "noun_exercises"
+if current_mode and available_modes[current_mode] != st.session_state.session_mode:
+    st.session_state.session_mode = available_modes[current_mode]
     refresh_test()
 
 if "questions" not in st.session_state:
-    # Call the LLM once and store the result
-    st.session_state.questions = generate_noun_exercise()
+    if st.session_state.session_mode == "noun_irregular_article_exercises":
+        st.session_state.questions = generate_noun_irregular_article_exercise()
+    elif st.session_state.session_mode == "noun_regular_article_exercises":
+        st.session_state.questions = generate_noun_regular_article_exercise()
     st.session_state.llm_called = True
 else:
     st.session_state.llm_called = False
@@ -113,8 +138,11 @@ def ask_question(question_data, idx):
                     # Disable further answers for this question
                     st.session_state.disabled[idx] = True
                     
-                    # Log the response without querying the database
-                    log_noun_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
+                    if st.session_state.session_mode == "noun_irregular_article_exercises":
+                        log_noun_irregular_article_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
+                    elif st.session_state.session_mode == "noun_regular_article_exercises":
+                        log_noun_regular_article_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
+                    log_noun_irregular_article_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
                     st.rerun()
 
         # Display feedback message after answering

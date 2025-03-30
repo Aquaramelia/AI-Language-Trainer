@@ -1,6 +1,6 @@
 import random
 from sqlalchemy import func
-from database.db_models_exercises import Noun, NounExercise, Verb, VerbExercise
+from database.db_models_exercises import NounArticlesRegular, NounArticleRegularExercise, Verb, VerbExercise, NounArticlesIrregular, NounArticleIrregularExercise
 from database.db_models_general import Base, SessionLocal, Vocabulary, User, Exercise
 
 def log_exercise(user_id, word_id, correct):
@@ -61,8 +61,12 @@ def get_random_words(limit):
     return __get_random_from_table(Vocabulary, limit=limit)
 
 
-def get_random_nouns(limit):
-    return __get_random_from_table(Noun, limit=limit)
+def get_random_nouns_regular_articles(limit):
+    return __get_random_from_table(NounArticlesRegular, limit=limit)
+
+
+def get_random_nouns_irregular_articles(limit):
+    return __get_random_from_table(NounArticlesIrregular, limit=limit)
 
 
 def get_random_verbs(limit):
@@ -107,12 +111,48 @@ def log_verb_exercise(user_id, verb_id, correct):
     session.close()
 
 
-def log_noun_exercise(user_id, noun_id, correct):
-    """Logs the user's noun article attempt."""
+def log_noun_regular_article_exercise(user_id, noun_id, correct):
+    """Logs or updates the user's noun article attempt, adjusting difficulty."""
     session = SessionLocal()
-    new_exercise = NounExercise(
-        user_id=user_id, noun_id=noun_id, correct=correct)
-    session.add(new_exercise)
+
+    # Try to find an existing record for this user and noun
+    existing_exercise = session.query(NounArticleRegularExercise).filter_by(user_id=user_id, noun_id=noun_id).first()
+
+    if existing_exercise:
+        # Update difficulty based on correctness
+        if correct:
+            existing_exercise.difficulty = max(0, existing_exercise.difficulty - 1)
+        else:
+            existing_exercise.difficulty += 1
+    else:
+        # Create new record with initial difficulty
+        difficulty = 1 if not correct else 0
+        new_exercise = NounArticleRegularExercise(user_id=user_id, noun_id=noun_id, difficulty=difficulty)
+        session.add(new_exercise)
+
+    session.commit()
+    session.close()
+    
+    
+def log_noun_irregular_article_exercise(user_id, noun_id, correct):
+    """Logs or updates the user's noun article attempt, adjusting difficulty."""
+    session = SessionLocal()
+
+    # Try to find an existing record for this user and noun
+    existing_exercise = session.query(NounArticleIrregularExercise).filter_by(user_id=user_id, noun_id=noun_id).first()
+
+    if existing_exercise:
+        # Update difficulty based on correctness
+        if correct:
+            existing_exercise.difficulty = max(0, existing_exercise.difficulty - 1)
+        else:
+            existing_exercise.difficulty += 1
+    else:
+        # Create new record with initial difficulty
+        difficulty = 1 if not correct else 0
+        new_exercise = NounArticleIrregularExercise(user_id=user_id, noun_id=noun_id, difficulty=difficulty)
+        session.add(new_exercise)
+
     session.commit()
     session.close()
 
@@ -149,6 +189,7 @@ def get_words_for_exercise(user_id, limit=5, difficulty_threshold=1, mix_ratio=0
 
     return selected_words
 
+
 def get_difficult_verbs(limit=5):
     """Fetches verbs the user struggles with the most."""
     session = SessionLocal()
@@ -163,16 +204,46 @@ def get_difficult_verbs(limit=5):
     return verbs
 
 
-def get_difficult_nouns(limit=5):
+def get_difficult_vocabulary(limit=5):
     """Fetches nouns where the user often picks the wrong article."""
     session = SessionLocal()
     nouns = (
-        session.query(Noun)
-        .join(NounExercise)
-        .filter(NounExercise.correct == False)
+        session.query(NounArticlesRegular)
+        .join(NounArticleRegularExercise)
+        .filter(NounArticleRegularExercise.difficulty < 0)
         .limit(limit)
         .all()
     )
     session.close()
     # Convert to list of dictionaries while excluding 'exercises'
-    return [{col.name: getattr(noun, col.name) for col in Noun.__table__.columns if col.name != "exercises"} for noun in nouns]
+    return [{col.name: getattr(noun, col.name) for col in NounArticlesRegular.__table__.columns if col.name != "exercises"} for noun in nouns]
+
+
+def get_difficult_regular_articles(limit=5):
+    """Fetches nouns where the user often picks the wrong article."""
+    session = SessionLocal()
+    nouns = (
+        session.query(NounArticlesRegular)
+        .join(NounArticleRegularExercise)
+        .filter(NounArticleRegularExercise.difficulty > 0)
+        .limit(limit)
+        .all()
+    )
+    session.close()
+    # Convert to list of dictionaries while excluding 'exercises'
+    return [{col.name: getattr(noun, col.name) for col in NounArticlesRegular.__table__.columns if col.name != "exercises"} for noun in nouns]
+
+
+def get_difficult_irregular_articles(limit=5):
+    """Fetches nouns where the user often picks the wrong article."""
+    session = SessionLocal()
+    nouns = (
+        session.query(NounArticlesIrregular)
+        .join(NounArticleIrregularExercise)
+        .filter(NounArticleIrregularExercise.difficulty > 0)
+        .limit(limit)
+        .all()
+    )
+    session.close()
+    # Convert to list of dictionaries while excluding 'exercises'
+    return [{col.name: getattr(noun, col.name) for col in NounArticlesIrregular.__table__.columns if col.name != "exercises"} for noun in nouns]
