@@ -1,5 +1,5 @@
 from sqlalchemy import func
-from database.db_models_exercises import Noun, Verb
+from database.db_models_exercises import NounArticlesRegular, Verb
 from database.db_models_general import SessionLocal, Vocabulary, User
 
 
@@ -43,7 +43,7 @@ def add_noun(word, article):
     try:
         """Adds a noun with its correct article."""
         session = SessionLocal()
-        noun = Noun(word=word, article=article)
+        noun = NounArticlesRegular(word=word, article=article)
         session.add(noun)
         session.commit()
         session.close()

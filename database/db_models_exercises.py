@@ -24,14 +24,23 @@ class Verb(Base):
 # Noun Table (For Tracking Articles)
 
 
-class Noun(Base):
-    __tablename__ = "nouns"
+class NounArticlesRegular(Base):
+    __tablename__ = "noun_articles_regular"
 
     id = Column(Integer, primary_key=True)
     word = Column(String, unique=True, nullable=False)  # e.g., "Tisch"
     article = Column(
         Enum("der", "die", "das", name="article_enum"), nullable=False)
-    exercises = relationship("NounExercise", back_populates="noun")
+    exercises = relationship("NounArticleRegularExercise", back_populates="noun")
+    
+class NounArticlesIrregular(Base):
+    __tablename__ = "noun_articles_irregular"
+
+    id = Column(Integer, primary_key=True)
+    word = Column(String, unique=True, nullable=False)  # e.g., "Tisch"
+    article = Column(
+        Enum("der", "die", "das", name="article_enum"), nullable=False)
+    exercises = relationship("NounArticleIrregularExercise", back_populates="noun")
 
 # Verb Exercise Table
 
@@ -51,17 +60,27 @@ class VerbExercise(Base):
 # Noun Article Exercise Table
 
 
-class NounExercise(Base):
-    __tablename__ = "noun_exercises"
+class NounArticleRegularExercise(Base):
+    __tablename__ = "noun_articles_regular_exercises"
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    noun_id = Column(Integer, ForeignKey("nouns.id"))
-    correct = Column(Boolean)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    noun_id = Column(Integer, ForeignKey("noun_articles_regular.id"))
+    difficulty = Column(Integer)
 
     user = relationship("User")
-    noun = relationship("Noun", back_populates="exercises")
+    noun = relationship("NounArticlesRegular", back_populates="exercises")
+    
+class NounArticleIrregularExercise(Base):
+    __tablename__ = "noun_articles_irregular_exercises"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    noun_id = Column(Integer, ForeignKey("noun_articles_irregular.id"))
+    difficulty = Column(Integer)
+
+    user = relationship("User")
+    noun = relationship("NounArticlesIrregular", back_populates="exercises")
 
 
 # Apply the changes
