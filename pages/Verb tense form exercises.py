@@ -4,7 +4,8 @@ import time
 import streamlit as st
 from database.db_helpers_exercises import log_verb_exercise
 from question_generation import generate_verb_exercise
-from streamlit_helpers import load_css, set_background
+from streamlit_helpers import load_css, set_background, complete_sentence
+from word_translation import translate_to_english
 
 st.set_page_config(
     page_title="Verb Tense Exercises - AI Language Trainer", 
@@ -24,6 +25,8 @@ def refresh_test():
     st.session_state.answers = {idx: None for idx in range(len(questions))}
     st.session_state.disabled = {idx: None for idx in range(len(questions))}
     st.session_state.is_correct = {idx: None for idx in range(len(questions))}
+    st.session_state.translation = {idx: None for idx in range(len(questions))}
+    st.session_state.complete_sentences = {idx: None for idx in range(len(questions))}
     st.session_state.icons = {}
     
     # Re-run the script to update UI without full reload
@@ -56,6 +59,12 @@ if "answers" not in st.session_state:
 if "disabled" not in st.session_state:
     st.session_state.disabled = {idx: None for idx in range(len(questions))}
 
+if "translation" not in st.session_state:
+    st.session_state.translation = {idx: None for idx in range(len(questions))}
+
+if "complete_sentences" not in st.session_state:
+    st.session_state.complete_sentences = {idx: None for idx in range(len(questions))}
+
 if "icons" not in st.session_state:
     st.session_state.icons = {}
     
@@ -68,80 +77,108 @@ st.sidebar.write(
 
 question_emojis = ["❓", "🔎", "🧠", "🏆", "📚", "🎯", "💡"]
 
+
 def ask_question(question_data, idx):
-    form = st.form(f"verb_exercise_form_{idx}")
-    emoji = st.session_state.icons[idx]
-    form.write(f"{emoji} {question_data['question']}")
-    form.markdown(
-        f":violet-badge[:material/start: {question_data['infinitive']}] :orange-badge[:material/star: {question_data['verb_tense']}]"
-    )
-
-    correct_answer = question_data["correct_answer"]
-    # Disable all buttons if an answer is selected
-    if st.session_state.answers[idx]:
-        st.session_state.disabled[idx] = True
+    with st.container(
+        key=f"question-container-{idx}"):
+        emoji = st.session_state.icons[idx]
         
-    user_input_content = ""
-    if st.session_state.answers[idx]:
-        user_input_content = st.session_state.answers[idx]
-
-            
-    # If the question is disabled, disable all buttons
-    disabled = st.session_state.disabled[idx] or correct_answer == st.session_state.answers[idx]
-    
-    # Text input for user to type the answer
-    user_input = form.text_input(
-        "Your answer:",
-        value=user_input_content,
-        key=f"text_{idx}",
-        disabled=disabled,
-        placeholder="Write your answer here."
-    )
-    
-    cleaned_input = user_input.strip()
-    cleaned_input = re.sub(r",\s*", " ", cleaned_input)  # Replace commas and optional spaces with a space
+        if not st.session_state.complete_sentences[idx]:
+            st.session_state.complete_sentences[idx] = complete_sentence(question_data)
         
-    form_submit_button = form.form_submit_button(label="Submit answer", disabled=disabled, use_container_width=True)
-    
-    if form_submit_button:
-
-        # Update session state with selected answer
-        st.session_state.answers[idx] = cleaned_input
-
-        # Check if the selected option corresponds to the correct answer's letter
-        cleaned_correct_answer = correct_answer.strip()
-        cleaned_correct_answer = re.sub(r",\s*", " ", cleaned_correct_answer) # Clean the answer, too
-        is_correct_answer = cleaned_correct_answer == cleaned_input
-        st.session_state.is_correct[idx] = is_correct_answer
-        if is_correct_answer:
-            st.toast(body="Correct answer!", icon="✅")
-            time.sleep(0.3)
-            st.session_state.score += 1
-            # TODO: track_progress(question_id=question_data.get("id"), is_correct=True)
-
-        else:
-            st.toast(body="Wrong answer", icon="❗")
-            time.sleep(0.3)
-            # TODO: track_progress(question_id=question_data.get("id"), is_correct=False)
-
-        # Disable further answers for this question
-        st.session_state.disabled[idx] = True
-        
-        # Log the response without querying the database
-        log_verb_exercise(USER_ID, question_data["verb_id"], st.session_state.is_correct[idx])
-        st.rerun()
-
-    # Display feedback message after answering
-    if st.session_state.is_correct[idx] is not None:
-        selected_option = st.session_state.answers[idx]
-        question_answer = correct_answer
-
-        if st.session_state.is_correct[idx] is True:
-            form.success(f"Correct! You answered: :green[{selected_option}].")
-        else:
-            form.error(
-                f"Wrong! You selected :red[{selected_option}], \n but the correct answer is :green[{question_answer}]."
+        col1, col2  = st.columns([7, 1])
+        with col1:
+            st.write(f"{emoji} {question_data['question']}")
+            st.markdown(
+                f":violet-badge[:material/start: {question_data['infinitive']}] :orange-badge[:material/star: {question_data['verb_tense']}]"
             )
+        with col2:
+                translation_disabled = False
+                if st.session_state.translation[idx] is not None:
+                    translation_disabled = True
+                if st.button(
+                    label=":material/Translate:",
+                    key=f"translate-button-{idx}",
+                    disabled=translation_disabled,
+                    args=(idx,)
+                ):
+                    translation = translate_to_english(st.session_state.complete_sentences[idx])
+                    if translation:
+                        st.session_state.translation[idx] = translation
+                    st.rerun()
+
+        correct_answer = question_data["correct_answer"]
+        # Disable all buttons if an answer is selected
+        if st.session_state.answers[idx]:
+            st.session_state.disabled[idx] = True
+            
+        user_input_content = ""
+        if st.session_state.answers[idx]:
+            user_input_content = st.session_state.answers[idx]
+
+        # If the question is disabled, disable all buttons
+        disabled = st.session_state.disabled[idx] or correct_answer == st.session_state.answers[idx]
+        
+        form = st.form(f"verb_exercise_form_{idx}")
+        # Text input for user to type the answer
+        user_input = form.text_input(
+            "Your answer:",
+            value=user_input_content,
+            key=f"text_{idx}",
+            disabled=disabled,
+            placeholder="Write your answer here."
+        )
+        
+        cleaned_input = user_input.strip()
+        cleaned_input = re.sub(r",\s*", " ", cleaned_input)  # Replace commas and optional spaces with a space
+            
+        form_submit_button = form.form_submit_button(label="Submit answer", disabled=disabled, use_container_width=True)
+        
+        if form_submit_button:
+
+            # Update session state with selected answer
+            st.session_state.answers[idx] = cleaned_input
+
+            # Check if the selected option corresponds to the correct answer's letter
+            cleaned_correct_answer = correct_answer.strip()
+            cleaned_correct_answer = re.sub(r",\s*", " ", cleaned_correct_answer) # Clean the answer, too
+            is_correct_answer = cleaned_correct_answer == cleaned_input
+            st.session_state.is_correct[idx] = is_correct_answer
+            if is_correct_answer:
+                st.toast(body="Correct answer!", icon="✅")
+                time.sleep(0.3)
+                st.session_state.score += 1
+                # TODO: track_progress(question_id=question_data.get("id"), is_correct=True)
+
+            else:
+                st.toast(body="Wrong answer", icon="❗")
+                time.sleep(0.3)
+                # TODO: track_progress(question_id=question_data.get("id"), is_correct=False)
+
+            # Disable further answers for this question
+            st.session_state.disabled[idx] = True
+            
+            # Log the response without querying the database
+            log_verb_exercise(USER_ID, question_data["verb_id"], st.session_state.is_correct[idx])
+            st.rerun()
+        
+        if st.session_state.translation[idx] is not None:
+            if st.session_state.is_correct[idx] is not None:
+                st.info(f"Translation: {st.session_state.complete_sentences[idx]} :material/line_end_arrow: {st.session_state.translation[idx]}")
+            else:
+                st.info(f"Translation :material/line_end_arrow: {st.session_state.translation[idx]}")
+
+        # Display feedback message after answering
+        if st.session_state.is_correct[idx] is not None:
+            selected_option = st.session_state.answers[idx]
+            question_answer = correct_answer
+
+            if st.session_state.is_correct[idx] is True:
+                st.success(f"Correct! You answered: :green[{selected_option}].")
+            else:
+                st.error(
+                    f"Wrong! You selected :red[{selected_option}], \n but the correct answer is :green[{question_answer}]."
+                )
 
 
 columns = st.columns([1, 0.1, 1])
