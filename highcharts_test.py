@@ -1,38 +1,43 @@
 import streamlit as st
-import streamlit_highcharts as hct
+import easychart
+from custom_easychart import rendering
 
-chart_def = {
-   "chart": {
-      "type": "column",
-      "backgroundColor": "#0000FF"  # Deep Blue Background
-   },
-   "title": {
-      "text": "🚀 INSANELY LARGE TITLE 🚀",
-      "align": "left",
-      "style": {"color": "#FF0000", "fontSize": "50px", "fontWeight": "bold"}  # Bright Red, Gigantic
-   },
-   "xAxis": {
-      "categories": ["🔥 Jet fuel", "🚗 Duty-free diesel"],
-      "labels": {"style": {"color": "#00FF00", "fontSize": "30px", "fontWeight": "bold"}}  # Neon Green, Huge
-   },
-   "yAxis": {
-      "title": {"text": "💧 MILLION LITERS 💧", 
-                "style": {"color": "#FFA500", "fontSize": "40px", "fontWeight": "bold"}},  # Orange, Massive
-      "labels": {"style": {"color": "#00FF00", "fontSize": "30px"}}  # Same Neon Green as X-Axis
-   },
-   "legend": {
-      "itemStyle": {"color": "#FF69B4", "fontSize": "35px", "fontWeight": "bold"}  # Pink, Extra Large
-   },
-   "series": [
-        {"type": "column", "name": "🟢 2020", "data": [59, 83]},
-        {"type": "column", "name": "🔵 2021", "data": [24, 79]},
-        {"type": "column", "name": "🟣 2022", "data": [58, 88]},
-        {"type": "spline",
-            "name": "⚡ AVERAGE",
-            "data": [47, 83.33],
-            "marker": {"lineWidth": 5, "fillColor": "yellow"}  # Thick yellow markers
-        }
-   ]
+# Ensure the chart is responsive
+easychart.config.rendering.responsive = True
+easychart.config.theme = "easychart"
+
+# Define labels and values
+labels = ["O", "A", "B", "AB"]
+values = [45, 40, 11, 4]
+
+# Create a donut (pie) chart
+chart = easychart.new("pie", title="Distribution of Blood Types")
+chart.subtitle = "Source: American Red Cross"
+chart.tooltip = "{point.percentage:.0f}%"
+
+# Apply a soft contrasting color palette
+chart.colors = ["#ff9ff3", "#feca57", "#1dd1a1", "#5f27cd"]
+
+# Add data
+chart.plot(
+    [{"name": label, "y": value, "sliced": True if i == 0 else False} for i, (label, value) in enumerate(zip(labels, values))]
+)
+
+# Make it a donut chart
+chart.options["plotOptions"] = {
+    "pie": {
+        "innerSize": "60%",  # Donut effect
+        "dataLabels": {
+            "enabled": True,
+            "style": {
+                "fontFamily": "Delius, cursive",
+                "fontSize": "20px",
+                "color": "#ffffff",
+                "textOutline": "0px contrast",  # Removes the default harsh text outline
+            },
+        },
+    }
 }
 
-hct.streamlit_highcharts(chart_def, 640)  # 640 is the chart height
+# Render the chart in Streamlit
+st.components.v1.html(rendering.render(chart), height=400)
