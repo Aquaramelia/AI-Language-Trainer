@@ -44,6 +44,7 @@ def refresh_test():
     st.session_state.answers = {idx: None for idx in range(len(questions))}
     st.session_state.disabled = {idx: None for idx in range(len(questions))}
     st.session_state.is_correct = {idx: None for idx in range(len(questions))}
+    st.session_state.translation = {idx: None for idx in range(len(questions))}
     st.session_state.icons = {}
     
     # Re-run the script to update UI without full reload
