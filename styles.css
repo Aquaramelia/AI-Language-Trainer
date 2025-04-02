@@ -202,3 +202,21 @@ th p {
    font-family: "Delius" !important;
    border-color: #ffffff0a;
 }
+
+/* Heatmap chart styles */
+
+.infolayer * {
+   font-family: "Delius" !important;
+   font-size: 90% !important;
+   text-align: center !important;
+}
+
+.st-key-heatmap-container {
+   border-radius: 15px !important;
+   padding: 0 10px !important;
+   background-color: #0900268f !important;
+}
+
+.g-gtitle * {
+   font-size: 100% !important;
+}
