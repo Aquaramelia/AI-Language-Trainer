@@ -163,7 +163,6 @@ def ask_question(question_data, idx):
                         log_noun_irregular_article_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
                     elif st.session_state.session_mode == "noun_regular_article_exercises":
                         log_noun_regular_article_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
-                    log_noun_irregular_article_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
                     st.rerun()
                     
         if st.session_state.translation[idx] is not None:
