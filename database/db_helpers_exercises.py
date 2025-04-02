@@ -1,7 +1,9 @@
+import datetime
 import random
+import pandas as pd
 from sqlalchemy import func
-from database.db_models_exercises import NounArticlesRegular, NounArticleRegularExercise, Verb, VerbExercise, NounArticlesIrregular, NounArticleIrregularExercise
-from database.db_models_general import Base, SessionLocal, Vocabulary, User, Exercise
+from database.db_models_exercises import NounArticlesRegular, NounArticleRegularExercise, Verb, VerbExercise, NounArticlesIrregular, NounArticleIrregularExercise, DateEntry
+from database.db_models_general import SessionLocal, Vocabulary, Exercise
 
 def log_exercise(user_id, word_id, correct):
     """Logs the user's answer and updates difficulty for incorrect responses."""
@@ -109,6 +111,7 @@ def log_verb_exercise(user_id, verb_id, correct):
     session.add(new_exercise)
     session.commit()
     session.close()
+    log_date_entry(user_id=user_id)
 
 
 def log_noun_regular_article_exercise(user_id, noun_id, correct):
@@ -132,6 +135,7 @@ def log_noun_regular_article_exercise(user_id, noun_id, correct):
 
     session.commit()
     session.close()
+    log_date_entry(user_id=user_id)
     
     
 def log_noun_irregular_article_exercise(user_id, noun_id, correct):
@@ -152,9 +156,48 @@ def log_noun_irregular_article_exercise(user_id, noun_id, correct):
         difficulty = 1 if not correct else 0
         new_exercise = NounArticleIrregularExercise(user_id=user_id, noun_id=noun_id, difficulty=difficulty)
         session.add(new_exercise)
-
     session.commit()
     session.close()
+    log_date_entry(user_id=user_id)
+
+def log_date_entry(user_id, date=None):
+    session = SessionLocal()
+    todays_date = datetime.date.today()
+    existing_date = session.query(DateEntry).filter_by(user_id=user_id, date=todays_date).first()
+    if existing_date:
+        existing_date.practice_count += 1
+    else:
+        practice_count = 1
+        new_date_entry = DateEntry(user_id=user_id, date=todays_date, practice_count=practice_count)
+        session.add(new_date_entry)
+    session.commit()
+    session.close()
+    
+def get_practice_data(user_id=1, start_date=None, end_date=None):
+    session = SessionLocal()
+    
+    query = session.query(DateEntry).filter(DateEntry.user_id == user_id)
+    
+    # Apply date filters if provided
+    if start_date:
+        query = query.filter(DateEntry.date >= start_date)
+    if end_date:
+        query = query.filter(DateEntry.date <= end_date)
+
+    # Fetch data
+    data = query.all()
+    session.close()
+    print(data)  # Debugging step
+    print([{"date": entry.date, "practice_count": entry.practice_count} for entry in data])
+
+    df = pd.DataFrame({
+        "date": [pd.Timestamp(entry.date) for entry in data],  # Convert to Timestamps
+        "practice_count": [entry.practice_count for entry in data]  # Extract counts
+    })
+
+
+
+    return df
 
 
 def get_words_for_exercise(user_id, limit=5, difficulty_threshold=1, mix_ratio=0.3):

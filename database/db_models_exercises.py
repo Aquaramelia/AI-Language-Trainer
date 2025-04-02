@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey, DateTime, Enum
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey, DateTime, Enum, Date
 from sqlalchemy.orm import sessionmaker, relationship
 from database.db_models_general import Base
 
@@ -13,6 +13,7 @@ engine = create_engine(DATABASE_URL, echo=True)
 
 class Verb(Base):
     __tablename__ = "verbs"
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True)
     infinitive = Column(String, unique=True, nullable=False)  # e.g., "sehen"
@@ -26,6 +27,7 @@ class Verb(Base):
 
 class NounArticlesRegular(Base):
     __tablename__ = "noun_articles_regular"
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True)
     word = Column(String, unique=True, nullable=False)  # e.g., "Tisch"
@@ -35,6 +37,7 @@ class NounArticlesRegular(Base):
     
 class NounArticlesIrregular(Base):
     __tablename__ = "noun_articles_irregular"
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True)
     word = Column(String, unique=True, nullable=False)  # e.g., "Tisch"
@@ -47,6 +50,7 @@ class NounArticlesIrregular(Base):
 
 class VerbExercise(Base):
     __tablename__ = "verb_exercises"
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
@@ -62,6 +66,7 @@ class VerbExercise(Base):
 
 class NounArticleRegularExercise(Base):
     __tablename__ = "noun_articles_regular_exercises"
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
@@ -73,6 +78,7 @@ class NounArticleRegularExercise(Base):
     
 class NounArticleIrregularExercise(Base):
     __tablename__ = "noun_articles_irregular_exercises"
+    __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
@@ -82,6 +88,14 @@ class NounArticleIrregularExercise(Base):
     user = relationship("User")
     noun = relationship("NounArticlesIrregular", back_populates="exercises")
 
+class DateEntry(Base):
+    __tablename__ = "practice_times"
+    __table_args__ = {"extend_existing": True}
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    practice_count = Column(Integer)
+    date = Column(Date, default=lambda: datetime.date.today(), unique=True)
 
 # Apply the changes
 Base.metadata.create_all(engine)
