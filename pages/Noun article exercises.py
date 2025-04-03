@@ -3,9 +3,9 @@ import random
 import time
 import streamlit as st
 from database.db_helpers_exercises import log_noun_irregular_article_exercise, log_noun_regular_article_exercise
-from question_generation import generate_noun_irregular_article_exercise, generate_noun_regular_article_exercise
-from streamlit_helpers import set_background, load_css
-from word_translation import translate_to_english
+from components.question_generation import generate_noun_irregular_article_exercise, generate_noun_regular_article_exercise
+from st_helpers.general_helpers import set_background, load_css
+from components.word_translation import translate_to_english
 
 st.set_page_config(
     page_title="Noun Article Exercises - AI Language Trainer", 

@@ -1,5 +1,5 @@
 import streamlit as st
-from word_translation import translate_to_english, translate_to_german
+from components.word_translation import translate_to_english, translate_to_german
 
 # Sidebar interface for translation
 st.sidebar.header("Translation Tool")
