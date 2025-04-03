@@ -4,6 +4,7 @@ from streamlit_helpers import load_css, set_background
 from database.db_helpers_dashboard import noun_article_statistics
 import pandas as pd
 from custom_easychart import rendering
+from streamlit_heatmap import heatmap
 
 st.set_page_config(page_title="Home - AI Language Trainer", page_icon="📖", layout="wide")
 set_background()
@@ -85,11 +86,7 @@ with col1:
             [{"name": label, "y": value, "sliced": True if i == 0 else False} for i, (label, value) in enumerate(zip(labels, values))],
             innerSize="60%"
         )
-        
-        # with chart.plotOptions.pie as options:
-        #     options.startAngle = -90
-        #     options.endAngle = 90
-        #     options.center = ["50%", "75%"]
+
         # Render the chart in Streamlit
         st.components.v1.html(rendering.render(chart), height=400)
 
