@@ -106,9 +106,17 @@ def update_difficulty(word_id, correct):
 def log_verb_exercise(user_id, verb_id, correct):
     """Logs the user's verb conjugation attempt."""
     session = SessionLocal()
-    new_exercise = VerbExercise(
-        user_id=user_id, verb_id=verb_id, correct=correct)
-    session.add(new_exercise)
+    existing_exercise = session.query(VerbExercise).filter_by(user_id=user_id, verb_id=verb_id).first()
+    if existing_exercise:
+        # Update difficulty based on correctness
+        if correct:
+            existing_exercise.difficulty = max(0, existing_exercise.difficulty - 1)
+        else:
+            existing_exercise.difficulty += 1
+    else:
+        difficulty = 1 if not correct else 0
+        new_exercise = VerbExercise(user_id=user_id, verb_id=verb_id, difficulty=difficulty)
+        session.add(new_exercise)
     session.commit()
     session.close()
     log_date_entry(user_id=user_id)
@@ -239,7 +247,7 @@ def get_difficult_verbs(limit=5):
     verbs = (
         session.query(Verb.infinitive, Verb.past_simple, Verb.past_participle)
         .join(VerbExercise)
-        .filter(VerbExercise.correct == False)
+        .filter(VerbExercise.difficulty > 0)
         .limit(limit)
         .all()
     )

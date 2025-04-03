@@ -55,8 +55,7 @@ class VerbExercise(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     verb_id = Column(Integer, ForeignKey("verbs.id"))
-    correct = Column(Boolean)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    difficulty = Column(Integer)
 
     user = relationship("User")
     verb = relationship("Verb", back_populates="exercises")

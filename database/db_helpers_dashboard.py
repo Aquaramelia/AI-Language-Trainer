@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from database.db_models_general import SessionLocal
-from database.db_helpers_exercises import NounArticleRegularExercise, NounArticleIrregularExercise, NounArticlesIrregular, NounArticlesRegular
+from database.db_helpers_exercises import NounArticleRegularExercise, NounArticleIrregularExercise, NounArticlesIrregular, NounArticlesRegular, VerbExercise, Verb
 
 def noun_article_statistics():
     # Create a session
@@ -33,4 +33,26 @@ def noun_article_statistics():
         "practice_irregular": practice_irregular,
         "total_regular": total_regular,
         "total_irregular": total_irregular
+    }
+
+
+def verb_tense_statistics():
+    # Create a session
+    session = SessionLocal()
+    
+    explored_verbs = session.query(VerbExercise.verb_id).distinct().count()
+    
+    learnt_verbs = session.query(VerbExercise).filter_by(difficulty=0).count()
+    
+    practice_verbs = session.query(VerbExercise).filter(VerbExercise.difficulty > 0).count()
+    
+    total_verbs = session.query(Verb).count()
+    
+    session.close()
+    
+    return {
+        "explored_verbs": explored_verbs,
+        "learnt_verbs": learnt_verbs,
+        "practice_verbs": practice_verbs,
+        "total_verbs": total_verbs
     }
