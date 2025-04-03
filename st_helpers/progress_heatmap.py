@@ -69,7 +69,7 @@ def return_chart():
             labels=dict(x="Week", y="Day", color="Exercises"),
             x=all_week_ranges,
             y=weekday_order,
-            color_continuous_scale="Purples_r",
+            color_continuous_scale="Purpor_r",
             title="Your progress over time"
         )
 
@@ -83,7 +83,8 @@ def return_chart():
         fig.update_layout(
             plot_bgcolor='rgba(0, 0, 0, 0)',
             paper_bgcolor='rgba(0, 0, 0, 0)',
-            title_x=0.1
+            title_x=0.1,
+            title_y=0.8
         )
 
         # Rotate x-axis labels
