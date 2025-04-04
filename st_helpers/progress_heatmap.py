@@ -91,5 +91,5 @@ def return_chart():
         fig.update_xaxes(tickangle=45)
 
         # Display heatmap in Streamlit
-        with st.container(key="heatmap-container"):
+        with st.container(key="heatmap-container-"):
             st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})

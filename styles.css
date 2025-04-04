@@ -211,7 +211,7 @@ th p {
    text-align: center !important;
 }
 
-.st-key-heatmap-container {
+[class*="st-key-heatmap-container"] {
    border-radius: 15px !important;
    padding: 0 10px !important;
    background-color: #0900268f !important;
