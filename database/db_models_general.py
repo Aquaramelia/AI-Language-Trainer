@@ -55,7 +55,7 @@ class Exercise(Base):
 
 
 # Create all tables
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
 
 # Create a session factory
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
