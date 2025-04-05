@@ -10,7 +10,6 @@ def return_chart(data, days, title):
     df['date'] = pd.to_datetime(df['date'])
 
     # Select past `n` days
-    days = 7
     today = pd.Timestamp.today().normalize()  # Use normalized pandas Timestamp
     selected_days = pd.date_range(end=today, periods=days)
 
