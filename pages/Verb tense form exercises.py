@@ -3,9 +3,9 @@ import re
 import time
 import streamlit as st
 from database.db_helpers_exercises import log_verb_exercise
-from question_generation import generate_verb_exercise
-from streamlit_helpers import load_css, set_background, complete_sentence
-from word_translation import translate_to_english
+from components.question_generation import generate_verb_exercise
+from st_helpers.general_helpers import load_css, set_background, complete_sentence
+from components.word_translation import translate_to_english
 
 st.set_page_config(
     page_title="Verb Tense Exercises - AI Language Trainer", 

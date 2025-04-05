@@ -29,7 +29,11 @@ def complete_sentence(question_data):
     """Fills in the blanks of a sentence with the correct answers."""
     sentence = question_data["question"]
     answers = question_data["correct_answer"].split(", ")
+    
+    # Split the sentence at blanks while preserving separators
+    parts = sentence.split("___")
 
-    # Replace the blanks with the correct answers
-    completed_sentence = sentence.replace("___", "{}").format(*answers)
+    # Reconstruct the sentence, inserting answers only where available
+    completed_sentence = "".join(part + (answers[i] if i < len(answers) else "") for i, part in enumerate(parts))
+
     return completed_sentence

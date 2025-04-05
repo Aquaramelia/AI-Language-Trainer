@@ -1,5 +1,5 @@
 from googletrans import Translator
-from st_helpers import run_async_task
+from st_helpers.asyncio_helpers import run_async_task
 
 translator = Translator()
 

@@ -181,3 +181,50 @@ section[data-testid="stSidebar"] h1 {
 [class*="st-key-stButtonGroup-container-mode"] {
    align-items: center !important;
 }
+
+/* Table styles */
+
+td p {
+   text-align: center !important;
+   color: rgba(255, 255, 255, 0.979);
+}
+
+.col_heading p {
+   text-align: center !important;
+}
+
+th p {
+   color: rgba(222, 255, 184, 0.74);
+}
+
+.stTable * {
+   font-size: 97% !important;
+   font-family: "Delius" !important;
+   border-color: #ffffff0a;
+}
+
+/* Heatmap chart styles */
+
+.infolayer * {
+   font-family: "Delius" !important;
+   font-size: 90% !important;
+   text-align: center !important;
+}
+
+[class*="st-key-heatmap-container"] {
+   border-radius: 15px !important;
+   padding: 0 10px !important;
+   background-color: #0900268f !important;
+}
+
+.g-gtitle * {
+   font-size: 110% !important;
+}
+
+/* Pie chart styles */
+[class*="st-key-question-chart-"]  {
+   font-size: 90% !important;
+   background-color: #0900268f !important;
+   border-radius: 15px !important;
+   padding: 15px;
+}
