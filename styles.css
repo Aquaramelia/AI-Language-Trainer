@@ -211,9 +211,9 @@ th p {
    text-align: center !important;
 }
 
-[class*="st-key-heatmap-container"] {
+[class*="st-key-heatmap-parent-container"] {
    border-radius: 15px !important;
-   padding: 0 10px !important;
+   padding: 0 30px !important;
    background-color: #0900268f !important;
 }
 
@@ -227,4 +227,21 @@ th p {
    background-color: #0900268f !important;
    border-radius: 15px !important;
    padding: 15px;
+}
+
+/* Bar chart styles */
+
+[class*="st-key-chart-parent-container"] {
+   border-radius: 15px !important;
+   padding: 0 60px !important;
+   background-color: #0900268f !important;
+}
+
+[class*="st-key-chart-child-container"] {
+   padding-top: 20px;
+   max-width: 80%;
+}
+
+.stVegaLiteChart details {
+   display: none;
 }
