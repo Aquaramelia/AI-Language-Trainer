@@ -145,6 +145,14 @@ section[kind="segmentedControl_active"] {
    font-size: 105% !important;
 }
 
+[class*="st-key-question-container-"] [data-baseweb="button-group"] p {
+   color:rgb(188, 244, 255) !important;
+}
+
+[class*="st-key-question-container-"] [data-baseweb="button-group"] [kind="segmented_control"] {
+   background: rgba(16, 16, 28, 0.61);
+}
+
 /* Expander element styles */
 
 .stExpander:hover summary {
