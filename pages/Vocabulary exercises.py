@@ -154,18 +154,22 @@ def ask_question(question_data, idx):
 
         selectbox_disabled = st.session_state.disabled[idx]
         
-        selected_value = st.session_state.answers[idx]
-        selected_index = choices.index(selected_value) if selected_value in choices else None
+        default_answer = st.session_state.answers[idx]
         
         with col1:
-            selected_answer = st.selectbox(
+            selected_answer = st.segmented_control(
                 options=choices, 
                 label="Select an option", 
                 label_visibility="collapsed",
                 disabled=selectbox_disabled,
                 key=selectbox_key, 
-                index=selected_index)
-            st.session_state.answers[idx] = selected_answer
+                default=default_answer,
+                selection_mode="single"
+            )
+            
+            if selected_answer != st.session_state.answers[idx]:
+                st.session_state.answers[idx] = selected_answer
+                st.rerun()
         
         with col2:
             if st.session_state.answers[idx]:
