@@ -109,11 +109,11 @@ def generate_vocabulary_exercise(level):
           "choices": ["Auto", "Lampe", "Handy"]
       }}
     """
-    # response = send_to_llm(question_prompt)
+    response = send_to_llm(question_prompt)
     # print(response)
-    response = {'questions': [{'word_id': 2, 'question': 'Ist ___ in Ordnung?', 'correct_answer': 'alles'}, {'word_id': 143, 'question': 'Darf ich mich Ihnen ___?', 'correct_answer': 'vorstellen'}, 
-{'word_id': 410, 'question': 'Das Essen ist sehr ___. ', 'correct_answer': 'lecker'}, {'word_id': 445, 'question': 'Wir treffen uns ___ 10 Uhr.', 'correct_answer': 'um'}, {'word_id': 
-472, 'question': 'Das ist sehr ___. Ich kaufe es!', 'correct_answer': 'billig'}, {'word_id': 167, 'question': 'Hier ist unser ___.', 'correct_answer': 'Familienfoto'}, {'word_id': 113, 'question': 'Ich möchte ___ nach Hause gehen.', 'correct_answer': 'jetzt'}, {'word_id': 387, 'question': 'Der Kurs ___ morgen.', 'correct_answer': 'beginnt'}, {'word_id': 260, 'question': 'Ich ___ ein neues Auto.', 'correct_answer': 'brauche'}, {'word_id': 389, 'question': 'Ich gehe ins ___, um zu schlafen.', 'correct_answer': 'Bett'}], 'choices': ['alles', 'vorstellen', 'lecker', 'um', 'billig', 'Familienfoto', 'jetzt', 'beginnt', 'brauche', 'Bett']}
+    # response = {'questions': [{'word_id': 2, 'question': 'Ist ___ in Ordnung?', 'correct_answer': 'alles'}, {'word_id': 143, 'question': 'Darf ich mich Ihnen ___?', 'correct_answer': 'vorstellen'}, 
+# {'word_id': 410, 'question': 'Das Essen ist sehr ___. ', 'correct_answer': 'lecker'}, {'word_id': 445, 'question': 'Wir treffen uns ___ 10 Uhr.', 'correct_answer': 'um'}, {'word_id': 
+# 472, 'question': 'Das ist sehr ___. Ich kaufe es!', 'correct_answer': 'billig'}, {'word_id': 167, 'question': 'Hier ist unser ___.', 'correct_answer': 'Familienfoto'}, {'word_id': 113, 'question': 'Ich möchte ___ nach Hause gehen.', 'correct_answer': 'jetzt'}, {'word_id': 387, 'question': 'Der Kurs ___ morgen.', 'correct_answer': 'beginnt'}, {'word_id': 260, 'question': 'Ich ___ ein neues Auto.', 'correct_answer': 'brauche'}, {'word_id': 389, 'question': 'Ich gehe ins ___, um zu schlafen.', 'correct_answer': 'Bett'}], 'choices': ['alles', 'vorstellen', 'lecker', 'um', 'billig', 'Familienfoto', 'jetzt', 'beginnt', 'brauche', 'Bett']}
     return response
 
 def generate_noun_regular_article_exercise(limit=10):
