@@ -127,10 +127,18 @@ input p {
 	color: rgb(245, 255, 196);
 }
 
-.st-bb {
+section[kind="segmentedControl_active"] {
   font-size: 90% !important;
   background-color: rgb(52, 41, 107) !important;
   color-scheme: light !important;
+}
+
+[data-baseweb="select"] * {
+  font-size: 95% !important;
+}
+
+[data-testid="stSelectboxVirtualDropdown"] * {
+   font-size: 105% !important;
 }
 
 /* Expander element styles */
@@ -152,6 +160,10 @@ input p {
 .st-emotion-cache-1vwew83:hover {
 	border-color: rgb(116, 255, 242);
 	color: rgb(254, 238, 149);
+}
+
+.st-key-vocabulary-submit-button p {
+   color: cyan !important;
 }
 
 /* Sidebar styles */
