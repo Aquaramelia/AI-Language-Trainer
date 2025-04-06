@@ -5,23 +5,23 @@ from sqlalchemy import func
 from database.db_models_exercises import NounArticlesRegular, NounArticleRegularExercise, Verb, VerbExercise, NounArticlesIrregular, NounArticleIrregularExercise, DateEntry
 from database.db_models_general import SessionLocal, Vocabulary, Exercise
 
-def log_exercise(user_id, word_id, correct):
+def log_exercise(user_id, word_id, correct, level):
     """Logs the user's answer and updates difficulty for incorrect responses."""
     session = SessionLocal()
-
-    # Log the exercise
-    new_exercise = Exercise(user_id=user_id, word_id=word_id, correct=correct)
-    session.add(new_exercise)
-
-    if not correct:
-        # Increase difficulty for incorrect words
-        word = session.query(Vocabulary).filter(
-            Vocabulary.id == word_id).first()
-        if word:
-            word.difficulty += 1
-
+    existing_exercise = session.query(Exercise).filter_by(user_id=user_id, word_id=word_id).first()
+    if existing_exercise:
+        # Update difficulty based on correctness
+        if correct:
+            existing_exercise.difficulty = max(0, existing_exercise.difficulty - 1)
+        else:
+            existing_exercise.difficulty += 1
+    else:
+        difficulty = 1 if not correct else 0
+        new_exercise = Exercise(user_id=user_id, word_id=word_id, difficulty=difficulty, level=level)
+        session.add(new_exercise)
     session.commit()
     session.close()
+    log_date_entry(user_id=user_id)
 
 
 def get_past_exercises(user_id, limit=5):
