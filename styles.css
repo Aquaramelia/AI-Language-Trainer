@@ -131,9 +131,9 @@ input p {
 	color: rgb(245, 255, 196);
 }
 
-section[kind="segmentedControl_active"] {
+[kind="segmented_controlActive"] {
   font-size: 90% !important;
-  background-color: rgb(52, 41, 107) !important;
+  background: rgb(52, 41, 107) !important;
   color-scheme: light !important;
 }
 
