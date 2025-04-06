@@ -72,7 +72,7 @@ def generate_vocabulary_exercise(level):
     If no weak vocabulary is found, or the weak words are fewer than the
     exercise limit, the rest are filled in with random words from the database, according to the selected level."""
     limit = 10
-    difficult_words = get_vocabulary_words(limit=limit, level="a1.1", user_id=1)
+    difficult_words = get_vocabulary_words(limit=limit, level=level, user_id=1)
 
     unique_words = list(set(difficult_words))
     print(unique_words)
@@ -80,34 +80,41 @@ def generate_vocabulary_exercise(level):
     noun_list = "\n".join([f"{id_} : {word}" for id_, word in unique_words])
 
     question_prompt = f"""
-    Generate a German vocabulary exercise. Use the following nouns:
+    Generate a German vocabulary exercise. Use the following words:
 
     {noun_list}
 
-    - Create sentences where the learner picks the correct word for each sentence.
-    - Include the noun ID for tracking.
+    - Create sentences where the learner picks the correct word for each sentence from the given pool of words.
+    - Include the word ID for tracking.
     - Provide the answer in **valid JSON dictionary format**.
+    - In case of a verb, change it to the correct verb tense form in the choices and the correct answer.
     - Example output:
       {{
           "questions": [
               {{
-                  "noun_id": 1,
+                  "word_id": 1,
                   "question": "Ich habe gestern das ___ gefahren.",
-                  "choices": ["Lampe", "Auto", "Handy"],
                   "correct_answer": "Auto"
               }},
               {{
-                  "noun_id": 2,
+                  "word_id": 2,
                   "question": "Wo hast du mein ___ gelassen?",
-                  "choices": ["Auto", "Lampe", "Handy"],
                   "correct_answer": "Handy"
+              }},
+              {{
+                  "word_id": 3,
+                  "question": "Ist die ___ an?",
+                  "correct_answer": "Lampe"
               }}
-          ]
+          ],
+          "choices": ["Auto", "Lampe", "Handy"]
       }}
     """
     # response = send_to_llm(question_prompt)
-    
-    response = {'questions': [{'noun_id': 527, 'question': 'Wir brauchten eine hohe ___, um die Wohnung zu mieten.', 'choices': ['Kaution', 'Kilo', 'Deutsch'], 'correct_answer': 'Kaution'}, {'noun_id': 302, 'question': 'Ich brauche ein ___ Mehl für den Kuchen.', 'choices': ['Adresse', 'Kilo', 'Projektor'], 'correct_answer': 'Kilo'}, {'noun_id': 14, 'question': 'Ich lerne seit einem Jahr ___.', 'choices': ['Wohnung', 'Deutsch', 'Problem'], 'correct_answer': 'Deutsch'}, {'noun_id': 189, 'question': 'Das ___ ist sehr hilfreich für das Lernen der Grammatik.', 'choices': ['Kursbuch', 'Computer', 'Kaution'], 'correct_answer': 'Kursbuch'}, {'noun_id': 211, 'question': 'Der ___ ist kaputt, wir können die Präsentation nicht zeigen.', 'choices': ['Projektor', 'Kilo', 'Adresse'], 'correct_answer': 'Projektor'}, {'noun_id': 392, 'question': 'Ich arbeite jeden Tag am ___.', 'choices': ['Computer', 'Wohnung', 'Problem'], 'correct_answer': 'Computer'}, {'noun_id': 85, 'question': 'Kannst du mir bitte deine ___ geben?', 'choices': ['Adresse', 'Kursbuch', 'Wann'], 'correct_answer': 'Adresse'}, {'noun_id': 452, 'question': 'Unsere ___ ist klein, aber gemütlich.', 'choices': ['Wohnung', 'Computer', 'Projektor'], 'correct_answer': 'Wohnung'}, {'noun_id': 210, 'question': 'Wir haben ein großes ___, das wir lösen müssen.', 'choices': ['Problem', 'Deutsch', 'Adresse'], 'correct_answer': 'Problem'}, {'noun_id': 451, 'question': '___ beginnt der Film?', 'choices': ['Wann', 'Kaution', 'Kilo'], 'correct_answer': 'Wann'}]}
+    # print(response)
+    response = {'questions': [{'word_id': 2, 'question': 'Ist ___ in Ordnung?', 'correct_answer': 'alles'}, {'word_id': 143, 'question': 'Darf ich mich Ihnen ___?', 'correct_answer': 'vorstellen'}, 
+{'word_id': 410, 'question': 'Das Essen ist sehr ___. ', 'correct_answer': 'lecker'}, {'word_id': 445, 'question': 'Wir treffen uns ___ 10 Uhr.', 'correct_answer': 'um'}, {'word_id': 
+472, 'question': 'Das ist sehr ___. Ich kaufe es!', 'correct_answer': 'billig'}, {'word_id': 167, 'question': 'Hier ist unser ___.', 'correct_answer': 'Familienfoto'}, {'word_id': 113, 'question': 'Ich möchte ___ nach Hause gehen.', 'correct_answer': 'jetzt'}, {'word_id': 387, 'question': 'Der Kurs ___ morgen.', 'correct_answer': 'beginnt'}, {'word_id': 260, 'question': 'Ich ___ ein neues Auto.', 'correct_answer': 'brauche'}, {'word_id': 389, 'question': 'Ich gehe ins ___, um zu schlafen.', 'correct_answer': 'Bett'}], 'choices': ['alles', 'vorstellen', 'lecker', 'um', 'billig', 'Familienfoto', 'jetzt', 'beginnt', 'brauche', 'Bett']}
     return response
 
 def generate_noun_regular_article_exercise(limit=10):
