@@ -26,9 +26,7 @@ available_modes = {
     "Level: B2 Set: 1": "b2.1",
     "Level: B2 Set: 2": "b2.2",
     "Level: C1 Set: 1": "c1.1",
-    "Level: C1 Set: 2": "c1.2",
-    "Level: C2 Set: 1": "c2.1",
-    "Level: C2 Set: 2": "c2.2",
+    "Level: C1 Set: 2": "c1.2"
 }
 
 mode_container = st.container(key="stButtonGroup-container-mode")
