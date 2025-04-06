@@ -269,3 +269,9 @@ th p {
 .stVegaLiteChart details {
    display: none;
 }
+
+/* Caption styles */
+
+[data-testid="stCaptionContainer"] * {
+   font-size: 90% !important;
+}
