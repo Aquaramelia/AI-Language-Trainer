@@ -128,7 +128,7 @@ def ask_question(question_data, idx):
         if not st.session_state.complete_sentences[idx]:
             st.session_state.complete_sentences[idx] = complete_sentence(question_data)
         
-        col1, col2  = st.columns([7, 1])
+        col1, col2 = st.columns([9, 1])
         with col1:
             st.write(f"{emoji} {question_data['question']}")
         with col2:
@@ -148,20 +148,29 @@ def ask_question(question_data, idx):
                 
         correct_answer = question_data["correct_answer"]
 
+        col1, col2 = st.columns([12,1])
         # Display answer buttons
         selectbox_key = f"selectbox_{idx}"
 
         selectbox_disabled = st.session_state.disabled[idx]
-        selected_answer = st.selectbox(
-            options=choices, 
-            label="Select an option", 
-            label_visibility="collapsed",
-            disabled=selectbox_disabled,
-            key=selectbox_key, 
-            index=choices.index(st.session_state.answers[idx]) if st.session_state.answers[idx] else None)
         
-        st.session_state.answers[idx] = selected_answer
+        selected_value = st.session_state.answers[idx]
+        selected_index = choices.index(selected_value) if selected_value in choices else None
         
+        with col1:
+            selected_answer = st.selectbox(
+                options=choices, 
+                label="Select an option", 
+                label_visibility="collapsed",
+                disabled=selectbox_disabled,
+                key=selectbox_key, 
+                index=selected_index)
+            st.session_state.answers[idx] = selected_answer
+        
+        with col2:
+            if st.session_state.answers[idx]:
+                st.write(":rainbow[🖋]")
+
         if st.session_state.test_complete and not st.session_state.answers_checked[idx]:
             
             # Check if the selected option corresponds to the correct answer's letter
@@ -174,10 +183,7 @@ def ask_question(question_data, idx):
             st.session_state.disabled[idx] = True
             st.session_state.answers_checked[idx] = True
             
-            # if st.session_state.session_mode == "noun_irregular_article_exercises":
-            #     log_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
-            # elif st.session_state.session_mode == "noun_regular_article_exercises":
-            #     log_exercise(USER_ID, question_data["noun_id"], st.session_state.is_correct[idx])
+            log_exercise(USER_ID, question_data["word_id"], st.session_state.is_correct[idx], available_modes[current_mode])
             st.rerun()
                     
         if st.session_state.translation[idx] is not None:
