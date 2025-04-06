@@ -85,6 +85,10 @@ div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
   background-color: #0900268f !important;
 }
 
+[class*="st-key-question-container-"] p {
+   font-size: 95% !important;
+}
+
 [class*="st-key-question-container-"] {
    border-radius: 15px !important;
    padding: 15px;
