@@ -170,8 +170,6 @@ def get_practice_data(user_id=1, start_date=None, end_date=None):
     # Fetch data
     data = query.all()
     session.close()
-    print(data)  # Debugging step
-    print([{"date": entry.date, "practice_count": entry.practice_count} for entry in data])
 
     df = pd.DataFrame({
         "date": [pd.Timestamp(entry.date) for entry in data],  # Convert to Timestamps
@@ -202,7 +200,6 @@ def get_vocabulary_words(level, limit, difficulty_threshold=1, mix_ratio=0.3, us
         .limit(int(limit * (1 - mix_ratio)))
         .all()
     )
-    print(f"difficult: {difficult_words}")
     
     random_limit = limit - len(difficult_words)
 
@@ -214,7 +211,6 @@ def get_vocabulary_words(level, limit, difficulty_threshold=1, mix_ratio=0.3, us
         .limit(random_limit) # If fewer difficult words are found, fill the rest with random words
         .all()
     )
-    print(f"random: {random_words}")
 
     session.close()
 

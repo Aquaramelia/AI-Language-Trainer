@@ -50,29 +50,3 @@ def add_noun(word, article):
     except Exception as e:
         print(f"Noun addition failed: {e}")
 
-
-# if __name__ == "__main__":
-    #  # Add some users
-    #  add_user("JohnDoe", "123456")
-
-    #  # Add some words
-    #  add_word("Haus", "House")
-    #  add_word("Baum", "Tree")
-    #  add_word("Wasser", "Water")
-
-    #  # Log some exercises (Simulating user mistakes)
-    #  log_exercise(1, 1, False)  # User 1 got 'Haus' wrong
-    #  log_exercise(1, 2, True)   # User 1 got 'Baum' correct
-    #  log_exercise(1, 1, False)  # User 1 got 'Haus' wrong again
-
-    #  # Fetch difficult words
-    #  print(get_difficult_words())
-    # add_word("Bier", "Beer")
-    # add_word("Handy", "Mobile phone")
-    # log_exercise(user_id=1, word_id=5, correct=False)
-    # update_difficulty(word_id=5, increase=True)
-    # words = get_difficult_words(user_id=1, limit=3)
-
-    # for word in words:
-    #     print(f"Word: {word.word}, Difficulty: {word.difficulty}")
-

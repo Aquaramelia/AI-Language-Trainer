@@ -75,7 +75,6 @@ def generate_vocabulary_exercise(level):
     difficult_words = get_vocabulary_words(limit=limit, level=level, user_id=1)
 
     unique_words = list(set(difficult_words))
-    print(unique_words)
     # Format nouns for LLM prompt
     noun_list = "\n".join([f"{id_} : {word}" for id_, word in unique_words])
 
