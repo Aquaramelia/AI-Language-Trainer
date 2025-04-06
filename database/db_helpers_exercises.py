@@ -38,31 +38,6 @@ def get_past_exercises(user_id, limit=5):
     return exercises
 
 
-def get_difficult_words(user_id, limit=5, difficulty_threshold=1):
-    """Fetch words that the user struggles with."""
-    session = SessionLocal()
-
-    words = (
-        session.query(Vocabulary)
-        .filter(Vocabulary.difficulty >= difficulty_threshold)
-        .order_by(Vocabulary.difficulty.desc())  # Prioritize hardest words
-        .limit(limit)
-        .all()
-    )
-
-    session.close()
-
-    # If no difficult words are found, fall back to random words
-    if not words:
-        return get_random_words(limit)
-
-    return words
-
-
-def get_random_words(limit):
-    return __get_random_from_table(Vocabulary, limit=limit)
-
-
 def get_random_nouns_regular_articles(limit):
     return __get_random_from_table(NounArticlesRegular, limit=limit)
 
@@ -203,34 +178,43 @@ def get_practice_data(user_id=1, start_date=None, end_date=None):
         "practice_count": [entry.practice_count for entry in data]  # Extract counts
     })
 
-
-
     return df
 
 
-def get_words_for_exercise(user_id, limit=5, difficulty_threshold=1, mix_ratio=0.3):
+def get_vocabulary_words(level, limit, difficulty_threshold=1, mix_ratio=0.3, user_id=1):
     """
     Fetches words for an exercise, prioritizing difficult words but mixing in some random ones.
     mix_ratio controls how many words will be selected randomly (default 30%).
     """
+    if not level:
+        return
+    
     session = SessionLocal()
 
     # Fetch difficult words
     difficult_words = (
-        session.query(Vocabulary)
-        .filter(Vocabulary.difficulty >= difficulty_threshold)
-        .order_by(Vocabulary.difficulty.desc())  # Hardest words first
+        session.query(Vocabulary.id, Vocabulary.word)
+        .join(Exercise)
+        .filter(Exercise.user_id == user_id)
+        .filter(Exercise.level == level)
+        .filter(Exercise.difficulty >= difficulty_threshold)
+        .order_by(Exercise.difficulty.desc())  # Hardest words first
         .limit(int(limit * (1 - mix_ratio)))
         .all()
     )
+    print(f"difficult: {difficult_words}")
+    
+    random_limit = limit - len(difficult_words)
 
     # Fetch random words to mix in
     random_words = (
-        session.query(Vocabulary)
+        session.query(Vocabulary.id, Vocabulary.word)
+        .filter(Vocabulary.level == level)
         .order_by(func.random())
-        .limit(int(limit * mix_ratio))
+        .limit(random_limit) # If fewer difficult words are found, fill the rest with random words
         .all()
     )
+    print(f"random: {random_words}")
 
     session.close()
 
@@ -253,21 +237,6 @@ def get_difficult_verbs(limit=5):
     )
     session.close()
     return verbs
-
-
-def get_difficult_vocabulary(limit=5):
-    """Fetches nouns where the user often picks the wrong article."""
-    session = SessionLocal()
-    nouns = (
-        session.query(NounArticlesRegular)
-        .join(NounArticleRegularExercise)
-        .filter(NounArticleRegularExercise.difficulty < 0)
-        .limit(limit)
-        .all()
-    )
-    session.close()
-    # Convert to list of dictionaries while excluding 'exercises'
-    return [{col.name: getattr(noun, col.name) for col in NounArticlesRegular.__table__.columns if col.name != "exercises"} for noun in nouns]
 
 
 def get_difficult_regular_articles(limit=5):
