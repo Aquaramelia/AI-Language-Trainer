@@ -1,3 +1,4 @@
+from sqlalchemy import desc, func
 from sqlalchemy.orm import sessionmaker
 from database.db_models_general import SessionLocal
 from database.db_helpers_exercises import NounArticleRegularExercise, NounArticleIrregularExercise, NounArticlesIrregular, NounArticlesRegular, VerbExercise, Verb, Exercise, Vocabulary
@@ -72,3 +73,14 @@ def vocabulary_statistics(level):
         "practice_vocabulary": practice_vocabulary,
         "total_vocabulary": total_vocabulary
     }
+    
+def most_practiced_levels():
+    session = SessionLocal()
+    levels = (
+        session.query(Exercise.level)
+        .group_by(Exercise.level)
+        .order_by(desc(func.count(Exercise.id)))
+        .limit(4)
+        .all()
+    )
+    return levels

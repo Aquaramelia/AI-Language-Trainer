@@ -6,6 +6,7 @@ from database.db_helpers_exercises import log_exercise
 from components.question_generation import generate_vocabulary_exercise
 from st_helpers.general_helpers import set_background, load_css, complete_sentence
 from components.word_translation import translate_to_english
+from st_helpers.vocabulary_helpers import available_modes
 
 st.set_page_config(
     page_title="Vocabulary Exercises - AI Language Trainer", 
@@ -15,19 +16,6 @@ set_background()
 load_css()
 st.title("Vocabulary Exercises")
 st.header("Practice choosing the correct word for each sentence.")
-
-available_modes = {
-    "Level: A1 Set: 1": "a1.1", 
-    "Level: A1 Set: 2": "a1.2",
-    "Level: A2 Set: 1": "a2.1", 
-    "Level: A2 Set: 2": "a2.2",
-    "Level: B1 Set: 1": "b1.1",
-    "Level: B1 Set: 2": "b1.2",
-    "Level: B2 Set: 1": "b2.1",
-    "Level: B2 Set: 2": "b2.2",
-    "Level: C1 Set: 1": "c1.1",
-    "Level: C1 Set: 2": "c1.2"
-}
 
 mode_container = st.container(key="stButtonGroup-container-mode")
 with mode_container:

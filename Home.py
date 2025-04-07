@@ -6,6 +6,7 @@ import st_helpers.progress_heatmap as progress_heatmap
 import st_helpers.progress_verb_tenses as progress_verb_tenses
 import st_helpers.progress_chart as progress_chart
 import st_helpers.progress_vocabulary as progress_vocabulary
+from st_helpers.vocabulary_helpers import available_modes,available_modes_r, return_chart_levels
 
 st.set_page_config(page_title="Home - AI Language Trainer", page_icon="📖", layout="wide")
 set_background()
@@ -22,7 +23,6 @@ col1, col2 = st.columns([1,1])
 
 # Show noun article exercise statistics
 with col1:
-    
     with st.container(
         key="question-chart-articles"
     ):
@@ -33,51 +33,60 @@ with col2:
         key="question-chart-verb-tenses"
     ):
         progress_verb_tenses.return_chart()
-        
-        
+    
+    
 # Show vocabulary learning statistics
-
+practiced_levels = return_chart_levels()
 col1, col2, col3, col4 = st.columns([1,1,1,1])
 with col1:
     with st.container(
         key="question-chart-vocabulary-1"
     ):
+        print(practiced_levels)
+        print(available_modes_r)
         progress_vocabulary.return_chart(
-            level="a1.1", 
-            levelTitle="Level: A1 Set: 1", 
+            level=practiced_levels[0], 
+            levelTitle=available_modes_r[practiced_levels[0]], 
             graphTitle="Vocabulary Card 1",
-            colormap="oranges",
+            colormap="purples",
             caption="This is your highest practiced level, well done!")
 with col2:
     with st.container(
         key="question-chart-vocabulary-2"
     ):
         progress_vocabulary.return_chart(
-            level="a1.2", 
-            levelTitle="Level: A1 Set: 2", 
+            level=practiced_levels[1], 
+            levelTitle=available_modes_r[practiced_levels[1]], 
             graphTitle="Vocabulary Card 2",
-            colormap="reds",
+            colormap="pubu",
             caption="You're getting the hang of this level — great progress!")
 with col3:
     with st.container(
         key="question-chart-vocabulary-3"
     ):
         progress_vocabulary.return_chart(
-            level="a2.1", 
-            levelTitle="Level: A2 Set: 1", 
+            level=practiced_levels[2], 
+            levelTitle=available_modes_r[practiced_levels[2]], 
             graphTitle="Vocabulary Card 3",
-            colormap="ylorbr",
-            caption="Nice work here! A bit more practice, and you’ll master it in no time.")
+            colormap="blues",
+            caption="You're on your way! Keep going and watch your skills grow.")
 with col4:
     with st.container(
         key="question-chart-vocabulary-4"
     ):
+        selected_level = ""        
+        level = st.selectbox(
+            key="selectbox-vocabulary-level",
+            options=available_modes.keys(),
+            label="Select a vocabulary level:",
+            label_visibility="visible"
+        )
         progress_vocabulary.return_chart(
-            level="a2.2", 
-            levelTitle="Level: A2 Set: 2", 
+            level=available_modes[level] if level is not None else practiced_levels[3], 
+            levelTitle=level if level is not None else available_modes[practiced_levels[3]],
             graphTitle="Vocabulary Card 4",
-            colormap="ylorrd",
-            caption="You're on your way! Keep going and watch your skills grow.")
+            colormap="bugn",
+            caption="")
         
 
 # Show weekly and monthly user progress statistics
