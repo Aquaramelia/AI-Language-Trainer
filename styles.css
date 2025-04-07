@@ -10,13 +10,16 @@ body,
 h2,
 h3,
 p,
-div {
+div,
+ul,
+li {
   font-family: "Balsamiq Sans", sans-serif;
   font-size: 102% !important;
 }
 
 h1,
-title {
+title,
+h2 {
   text-align: center !important;
   font-family: "Delius" !important;
   font-weight: 400 !important;
@@ -31,6 +34,11 @@ h3 {
 
 h1 a {
    display: none !important;
+}
+
+/*  Streamlit header */
+header{
+   background-color: #00000000 !important;
 }
 
 /* General alert container styles */
@@ -83,6 +91,63 @@ div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
 [class*="st-key-question-container-"]  {
   font-size: 90% !important;
   background-color: #0900268f !important;
+}
+
+[class*="st-key-question-container-"] h2 {
+  font-size: 100% !important;
+  font-family: "Delius" !important;
+}
+
+[class*="st-key-question-container-"] textarea {
+  font-size: 100% !important;
+  font-family: "Balsamiq sans" !important;
+  background: var(--paper-color);
+   /* margin: 2rem; */
+   padding: calc(var(--top-space) - 0.5lh) 3rem 1rem 5.5rem;
+   font-family: "Balsamiq sans" !important;
+   font-size: 1.5rem !important;
+   line-height: 1.6;
+   color: var(--ink-color);
+   background-image: 
+      /* the red line */ linear-gradient(
+      90deg,
+      transparent,
+      transparent 4rem,
+      var(--side-line-color) 4rem,
+      var(--side-line-color) 4.25rem,
+      transparent 4.25rem
+      ),
+      /*  The top space  */
+      linear-gradient(
+         var(--paper-color),
+         var(--paper-color) var(--top-space),
+         transparent var(--top-space)
+      ),
+      /* the blue lines */
+      repeating-linear-gradient(
+         transparent,
+         transparent calc(1lh - var(--line-thickness)),
+         var(--main-line-color) calc(1lh - var(--line-thickness)),
+         var(--main-line-color) 1lh,
+         transparent 1lh
+      );
+   box-shadow: 0 0 1rem rgb(0 0 0 / 0.25);
+}
+
+[class*="st-key-question-container-"] .stTextArea label p {
+  font-size: 120% !important;
+  font-family: "Delius" !important;
+  color: rgba(255, 255, 255, 0.774);
+}
+
+[data-baseweb="textarea"] {
+	border-radius: 3px !important;
+	box-shadow: -3px 4px 5px #0000005c;
+}
+
+
+[class*="st-key-question-container-"] [data-baseweb="base-input"] {
+   background-color: rgba(0, 0, 0, 0.18);
 }
 
 [class*="st-key-question-container-"] p {
@@ -161,6 +226,12 @@ input p {
 
 .stExpander:hover svg {
    fill: rgb(151, 154, 221);
+}
+
+/* Chat element styles */
+.stChatMessage * {
+   font-size: 100% !important;
+   font-family: "Delius" !important;
 }
 
 /* Submit button styles */
@@ -275,4 +346,40 @@ th p {
 [data-testid="stCaptionContainer"] * {
    font-size: 90% !important;
    color: #a1b0ff;
+}
+
+/* Paper texture style */
+
+:root {
+  --main-line-color: hsla(233.2, 100%, 31%, 0.23);
+  --side-line-color: hsla(27, 49%, 57%, 0.151);
+  --paper-color: hsla(233.5, 100%, 83.7%, 0.92);
+  --ink-color: hsl(250.2, 100%, 53.9%);
+  --line-thickness: 3px;
+  --top-space: 0lh;
+}
+
+.notepad {
+   box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.15);
+   border-radius: 0 0 10px 10px;
+   overflow: hidden;
+}
+
+.top {
+   width: 100%;
+   height: 50px;
+   background: #333;
+   border-radius: 5px 5px 0 0;
+}
+
+.paper {
+   width: 100%;
+   height: 100%;
+   padding: 35px 20px;
+   background: repeating-linear-gradient(#f1ede9, #f1ede9 31px, #94acd4 31px, #94acd4 32px);
+   font-family: "Delius" !important;
+   line-height: 32px;
+   outline: 0;
+   font-size: 80% !important;
+   color: black;
 }
