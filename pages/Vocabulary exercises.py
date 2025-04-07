@@ -1,6 +1,4 @@
-import json
 import random
-import time
 import streamlit as st
 from database.db_helpers_exercises import log_exercise
 from components.question_generation import generate_vocabulary_exercise
