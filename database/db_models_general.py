@@ -31,12 +31,7 @@ class Vocabulary(Base):
 
     id = Column(Integer, primary_key=True)
     word = Column(String, unique=True, nullable=False)
-    translation = Column(String)
-    # Higher difficulty = more mistakes
-    difficulty = Column(Integer, default=0)
-
-    # Relationship with exercises
-    exercises = relationship("Exercise", back_populates="word")
+    level = Column(String)
 
 # Exercise Model (Tracks User Performance)
 
@@ -47,11 +42,10 @@ class Exercise(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     word_id = Column(Integer, ForeignKey("vocabulary.id"))
-    correct = Column(Boolean)
-    timestamp = Column(DateTime, default=datetime.utcnow)
-
+    level = Column(String)
+    difficulty = Column(Integer)
+    
     user = relationship("User", back_populates="exercises")
-    word = relationship("Vocabulary", back_populates="exercises")
 
 
 # Create all tables

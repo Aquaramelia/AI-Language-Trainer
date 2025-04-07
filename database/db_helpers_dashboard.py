@@ -1,6 +1,7 @@
+from sqlalchemy import desc, func
 from sqlalchemy.orm import sessionmaker
 from database.db_models_general import SessionLocal
-from database.db_helpers_exercises import NounArticleRegularExercise, NounArticleIrregularExercise, NounArticlesIrregular, NounArticlesRegular, VerbExercise, Verb
+from database.db_helpers_exercises import NounArticleRegularExercise, NounArticleIrregularExercise, NounArticlesIrregular, NounArticlesRegular, VerbExercise, Verb, Exercise, Vocabulary
 
 def noun_article_statistics():
     # Create a session
@@ -11,8 +12,8 @@ def noun_article_statistics():
     explored_irregular = session.query(NounArticleIrregularExercise.noun_id).distinct().count()
 
     # Number of learnt nouns (difficulty = 0)
-    learnt_regular = session.query(NounArticleRegularExercise).filter_by(difficulty=0).count()
-    learnt_irregular = session.query(NounArticleIrregularExercise).filter_by(difficulty=0).count()
+    learnt_regular = session.query(NounArticleRegularExercise).filter(NounArticleRegularExercise.difficulty == 0).count()
+    learnt_irregular = session.query(NounArticleIrregularExercise).filter(NounArticleRegularExercise.difficulty == 0).count()
 
     # Number of nouns needing practice (difficulty > 0)
     practice_regular = session.query(NounArticleRegularExercise).filter(NounArticleRegularExercise.difficulty > 0).count()
@@ -42,7 +43,7 @@ def verb_tense_statistics():
     
     explored_verbs = session.query(VerbExercise.verb_id).distinct().count()
     
-    learnt_verbs = session.query(VerbExercise).filter_by(difficulty=0).count()
+    learnt_verbs = session.query(VerbExercise).filter(VerbExercise.difficulty == 0).count()
     
     practice_verbs = session.query(VerbExercise).filter(VerbExercise.difficulty > 0).count()
     
@@ -56,3 +57,30 @@ def verb_tense_statistics():
         "practice_verbs": practice_verbs,
         "total_verbs": total_verbs
     }
+    
+def vocabulary_statistics(level):
+    session = SessionLocal()
+    explored_vocabulary = session.query(Exercise.word_id).filter(Exercise.level == level).distinct().count()
+    learnt_vocabulary = session.query(Exercise).filter(Exercise.difficulty == 0).filter(Exercise.level == level).count()
+    practice_vocabulary = session.query(Exercise).filter(Exercise.difficulty > 0).filter(Exercise.level == level).count()
+    total_vocabulary = session.query(Vocabulary).filter(Vocabulary.level == level).count()
+    
+    session.close()
+    
+    return {
+        "explored_vocabulary": explored_vocabulary,
+        "learnt_vocabulary": learnt_vocabulary,
+        "practice_vocabulary": practice_vocabulary,
+        "total_vocabulary": total_vocabulary
+    }
+    
+def most_practiced_levels():
+    session = SessionLocal()
+    levels = (
+        session.query(Exercise.level)
+        .group_by(Exercise.level)
+        .order_by(desc(func.count(Exercise.id)))
+        .limit(4)
+        .all()
+    )
+    return levels

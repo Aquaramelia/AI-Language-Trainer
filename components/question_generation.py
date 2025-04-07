@@ -3,7 +3,7 @@ from google import genai
 import os
 from dotenv import load_dotenv
 
-from database.db_helpers_exercises import get_difficult_verbs, get_difficult_vocabulary, get_random_nouns_regular_articles, get_random_nouns_irregular_articles, get_random_verbs, get_difficult_regular_articles, get_difficult_irregular_articles, get_random_words
+from database.db_helpers_exercises import get_difficult_verbs, get_random_nouns_regular_articles, get_random_nouns_irregular_articles, get_random_verbs, get_difficult_regular_articles, get_difficult_irregular_articles, get_vocabulary_words
 
 load_dotenv()
 API_KEY = os.environ["API_KEY"]
@@ -67,50 +67,53 @@ def generate_verb_exercise():
     return response
 
 
-def generate_vocabulary_exercise():
-    """Generates a noun article exercise using the user's weak nouns.
-    If no weak nouns are found, or the weak nouns are fewer than the
-    exercise limit, the rest are filled in with random nouns from the database."""
+def generate_vocabulary_exercise(level):
+    """Generates a noun article exercise using the user's weak vocabulary.
+    If no weak vocabulary is found, or the weak words are fewer than the
+    exercise limit, the rest are filled in with random words from the database, according to the selected level."""
     limit = 10
-    difficult_nouns = get_difficult_vocabulary(limit=limit)  # Get 3 weak verbs
+    difficult_words = get_vocabulary_words(limit=limit, level=level, user_id=1)
 
-    if not difficult_nouns:
-        print("No weak nouns found. Getting random nouns!")
-        difficult_nouns = get_random_words(limit=limit)
-    elif len(difficult_nouns) < limit:
-        random_nouns = get_random_words(limit - len(difficult_nouns))
-        difficult_nouns = difficult_nouns + random_nouns
-    unique_nouns = [dict(t) for t in {tuple(d.items()) for d in difficult_nouns}]
+    unique_words = list(set(difficult_words))
     # Format nouns for LLM prompt
-    noun_list = "\n".join([f"{n['id']}: {n['word']} - {n['article']}" for n in unique_nouns])
+    noun_list = "\n".join([f"{id_} : {word}" for id_, word in unique_words])
 
     question_prompt = f"""
-    Generate a German noun article exercise. Use the following nouns:
+    Generate a German vocabulary exercise. Use the following words:
 
     {noun_list}
 
-    - Create **multiple-choice questions** where the learner picks the correct article.
-    - Include the noun ID for tracking.
+    - Create sentences where the learner picks the correct word for each sentence from the given pool of words.
+    - Include the word ID for tracking.
     - Provide the answer in **valid JSON dictionary format**.
+    - In case of a verb, change it to the correct verb tense form in the choices and the correct answer.
     - Example output:
       {{
           "questions": [
               {{
-                  "noun_id": 1,
-                  "question": "What is the correct article for 'Auto'?",
-                  "choices": ["der", "die", "das"],
-                  "correct_answer": "das"
+                  "word_id": 1,
+                  "question": "Ich habe gestern das ___ gefahren.",
+                  "correct_answer": "Auto"
               }},
               {{
-                  "noun_id": 2,
-                  "question": "What is the correct article for 'Lampe'?",
-                  "choices": ["der", "die", "das"],
-                  "correct_answer": "die"
+                  "word_id": 2,
+                  "question": "Wo hast du mein ___ gelassen?",
+                  "correct_answer": "Handy"
+              }},
+              {{
+                  "word_id": 3,
+                  "question": "Ist die ___ an?",
+                  "correct_answer": "Lampe"
               }}
-          ]
+          ],
+          "choices": ["Auto", "Lampe", "Handy"]
       }}
     """
     response = send_to_llm(question_prompt)
+    # print(response)
+    # response = {'questions': [{'word_id': 2, 'question': 'Ist ___ in Ordnung?', 'correct_answer': 'alles'}, {'word_id': 143, 'question': 'Darf ich mich Ihnen ___?', 'correct_answer': 'vorstellen'}, 
+# {'word_id': 410, 'question': 'Das Essen ist sehr ___. ', 'correct_answer': 'lecker'}, {'word_id': 445, 'question': 'Wir treffen uns ___ 10 Uhr.', 'correct_answer': 'um'}, {'word_id': 
+# 472, 'question': 'Das ist sehr ___. Ich kaufe es!', 'correct_answer': 'billig'}, {'word_id': 167, 'question': 'Hier ist unser ___.', 'correct_answer': 'Familienfoto'}, {'word_id': 113, 'question': 'Ich möchte ___ nach Hause gehen.', 'correct_answer': 'jetzt'}, {'word_id': 387, 'question': 'Der Kurs ___ morgen.', 'correct_answer': 'beginnt'}, {'word_id': 260, 'question': 'Ich ___ ein neues Auto.', 'correct_answer': 'brauche'}, {'word_id': 389, 'question': 'Ich gehe ins ___, um zu schlafen.', 'correct_answer': 'Bett'}], 'choices': ['alles', 'vorstellen', 'lecker', 'um', 'billig', 'Familienfoto', 'jetzt', 'beginnt', 'brauche', 'Bett']}
     return response
 
 def generate_noun_regular_article_exercise(limit=10):
