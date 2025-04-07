@@ -37,14 +37,13 @@ def return_chart():
     chart.tooltip.useHTML = True
     chart.tooltip.pointFormat = """
         <div style="text-align: center;">
-            <span style="color: {point.color};"><b>{point.name}</b></span><br/>
+            <span style="color: {point.color}; text-shadow: 0 0 6px #e4d4ff"><b>{point.name}</b></span><br/>
             {point.y:.0f} verbs - {point.percentage:.0f}%
         </div>
     """
     chart.tooltip.style = {"color": "#ffffff"}
-    chart.tooltip.backgroundColor = "#222222"
-    # Add data
-    chart.cAxis = "puor"
+    chart.tooltip.backgroundColor = "#caabffaa"
+    chart.cAxis = "rdpu"
     chart.chart.backgroundColor = "rgba(0, 0, 0, 0)"
     chart.title.style = {"color": "#ffffff", "font-size": "1.6em"}
     chart.title.align = "center"

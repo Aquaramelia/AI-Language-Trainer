@@ -30,7 +30,7 @@ def return_chart(level, levelTitle, graphTitle, colormap, caption):
         ]
 
     # Create pie chart
-    easychart.config.scripts.append("https://code.highcharts.com/modules/variable-pie.js")
+    easychart.config.rendering.responsive = True
     easychart.config.save()
     chart = easychart.new("variablepie")
     chart.title = graphTitle
@@ -39,12 +39,12 @@ def return_chart(level, levelTitle, graphTitle, colormap, caption):
     chart.tooltip.useHTML = True
     chart.tooltip.pointFormat = """
         <div style="text-align: center;">
-            <span style="color: {point.color};"><b>{point.name}</b></span><br/>
+            <span style="color: {point.color}; text-shadow: 0 0 6px #e4d4ff"><b>{point.name}</b></span><br/>
             {point.y:.0f} words - {point.percentage:.0f}%
         </div>
     """
     chart.tooltip.style = {"color": "#ffffff"}
-    chart.tooltip.backgroundColor = "#222222"
+    chart.tooltip.backgroundColor = "#caabffaa"
     # Add data
     chart.cAxis = colormap
     chart.chart.backgroundColor = "rgba(0, 0, 0, 0)"
@@ -57,8 +57,7 @@ def return_chart(level, levelTitle, graphTitle, colormap, caption):
     chart.yAxis.labels.style = {"color": "#ffffff"}
     # "sliced": True if i == 0 else False to have the first piece protrude a litle
     chart.plot(
-        [{"name": label, "y": value, "sliced": True if i == 0 else False} for i, (label, value) in enumerate(zip(labels, values))],
-        innerSize="60%"
+        [{"name": label, "y": value, "sliced": True if i == 0 else False} for i, (label, value) in enumerate(zip(labels, values))]
     )
 
     # Render the chart in Streamlit

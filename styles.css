@@ -274,4 +274,5 @@ th p {
 
 [data-testid="stCaptionContainer"] * {
    font-size: 90% !important;
+   color: #a1b0ff;
 }

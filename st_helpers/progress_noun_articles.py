@@ -39,6 +39,8 @@ def return_chart():
         ]
 
     # Create pie chart
+    easychart.config.rendering.responsive = True
+    easychart.config.save()
     chart = easychart.new("pie")
     chart.title = ("Noun articles learning progress").title()
     chart.subtitle = "Progress is saved after each answered question."
@@ -46,14 +48,14 @@ def return_chart():
     chart.tooltip.useHTML = True
     chart.tooltip.pointFormat = """
         <div style="text-align: center;">
-            <span style="color: {point.color};"><b>{point.name}</b></span><br/>
+            <span style="color: {point.color}; text-shadow: 0 0 6px #e4d4ff"><b>{point.name}</b></span><br/>
             {point.y:.0f} nouns - {point.percentage:.0f}%
         </div>
     """
     chart.tooltip.style = {"color": "#ffffff"}
-    chart.tooltip.backgroundColor = "#222222"
+    chart.tooltip.backgroundColor = "#caabffaa"
     # Add data
-    chart.cAxis = "piyg"
+    chart.cAxis = "purd"
     chart.chart.backgroundColor = "rgba(0, 0, 0, 0)"
     chart.title.style = {"color": "#ffffff", "font-size": "1.6em"}
     chart.title.align = "center"
