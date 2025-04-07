@@ -3,18 +3,16 @@ import streamlit as st
 def set_background(image_url="https://www.transparenttextures.com/patterns/debut-light.png"):
     css = f"""
     <style>
-        .stApp {{
-            background-image: url("{image_url}");
-            background-color: #5b4189;
+        html, body, .stApp {{
+            background-color: transparent;
+            background-image: url("https://www.transparenttextures.com/patterns/debut-light.png"), linear-gradient(62deg, rgb(79, 167, 255) 0%, rgb(207, 158, 255) 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }}
 
-        .stApp header {{
-            background-image: url("{image_url}");
-            background-color: #5b4189;
-        }}
-        
         h1 {{
-           text-shadow: 2px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }}
     </style>
     """
