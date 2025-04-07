@@ -63,7 +63,7 @@ def generate_verb_exercise():
 
     """
 
-    response = send_to_llm(question_prompt)
+    response = send_to_llm_decode_json(question_prompt)
     return response
 
 
@@ -109,7 +109,7 @@ def generate_vocabulary_exercise(level):
           "choices": ["Auto", "Lampe", "Handy"]
       }}
     """
-    response = send_to_llm(question_prompt)
+    response = send_to_llm_decode_json(question_prompt)
     # print(response)
     # response = {'questions': [{'word_id': 2, 'question': 'Ist ___ in Ordnung?', 'correct_answer': 'alles'}, {'word_id': 143, 'question': 'Darf ich mich Ihnen ___?', 'correct_answer': 'vorstellen'}, 
 # {'word_id': 410, 'question': 'Das Essen ist sehr ___. ', 'correct_answer': 'lecker'}, {'word_id': 445, 'question': 'Wir treffen uns ___ 10 Uhr.', 'correct_answer': 'um'}, {'word_id': 
@@ -179,7 +179,63 @@ def generate_noun_irregular_article_exercise(limit=10):
 
     return {"questions": questions}
 
-def send_to_llm(prompt):
+def generate_writing_exercise():
+    question_prompt = """ 
+    Create a list of 5 essay or short writing prompts suitable for A1-C1 level German learners. The topics should be engaging, encouraging students to express their opinions and reflect on personal experiences. Each prompt should be clear and straightforward, allowing for creative responses. The prompts should vary in style, with some focusing on personal experience, while others encourage opinion-based writing. Provide the title of the prompt and a brief description to explain the writing task. Output in a **valid JSON format** as follows:
+    {
+        "writing_prompts": [
+            {
+                "prompt": "Beschreibe deinen letzten Urlaub. Wo bist du hingefahren und was hast du dort gemacht?",
+                "level": "A1"
+            },
+            {
+                "prompt": "Was sind deine Hobbys und warum machst du sie gerne? Erkläre, was dir an deinen Hobbys am meisten Spaß macht.",
+                "level": "A2"
+            },
+            {
+                "prompt": "Stell dir vor, du könntest einen Tag lang jemand anderes sein. Wer würdest du sein und was würdest du an diesem Tag tun?",
+                "level": "B1"
+            },
+            {
+                "prompt": "Was denkst du über den Klimawandel? Welche Maßnahmen sollten deiner Meinung nach ergriffen werden, um die Umwelt zu schützen?",
+                "level": "B2"
+            },
+            {
+                "prompt": "Was sind die wichtigsten Eigenschaften einer guten Freundschaft? Erkläre, was du von deinen Freunden erwartest und was eine Freundschaft für dich bedeutet.",
+                "level": "C1"
+            }
+        ]
+    }
+    """
+    # response = send_to_llm(prompt=question_prompt)
+    # print(response)
+    response = {'writing_prompts': [{'title': 'Meine perfekte Reise: Ein Traumziel', 'prompt': 'Stell dir vor, du könntest eine perfekte Reise planen, ohne Einschränkungen beim Budget. Wohin würdest du reisen, warum genau dorthin und was würdest du dort alles erleben? Beschreibe deine ideale Reiseroute und begründe deine Entscheidungen.', 'description': 'This prompt encourages students to use their imagination and vocabulary related to travel, culture, and personal preferences. They should describe their dream destination and explain their reasons for choosing it.', 'level': 'B1'}, {'title': 'Die Bedeutung von Technologie in meinem Leben', 'prompt': 'Wie hat Technologie dein Leben in den letzten Jahren beeinflusst? Welche Vorteile und Nachteile siehst du? Beschreibe ein Beispiel, in dem Technologie dir geholfen oder Probleme verursacht hat. Was denkst du über die zukünftige Rolle der Technologie?', 'description': 'This prompt asks students to reflect on the impact of technology on their lives, both positive and negative. It encourages critical thinking and the expression of personal opinions.', 'level': 'B1'}, {'title': 'Ein unvergessliches Erlebnis', 'prompt': 'Erzähle von einem unvergesslichen Erlebnis in deinem Leben. Was ist passiert, wer war dabei und warum war es so besonders für dich? Welche Lehren hast du daraus gezogen?', 'description': 'This prompt focuses on personal narrative and encourages students to use descriptive language to recount a significant experience and reflect on its meaning.', 'level': 'B1', 'type': 'narrative'}, {'title': 'Sollte Schuluniform Pflicht sein?', 'prompt': 'In vielen Ländern gibt es eine Debatte darüber, ob Schuluniformen Pflicht sein sollten oder nicht. Was ist deine Meinung dazu? Welche Argumente gibt es dafür und dagegen? Begründe deine Position.', 'description': 'This prompt is designed to elicit opinion-based writing and encourages students to develop arguments for or against school uniforms. It requires them to consider different perspectives and provide reasoned justifications.', 'level': 'B2'}, {'title': 'Meine Vorbilder und ihre Bedeutung', 'prompt': 'Wer sind deine Vorbilder und warum bewunderst du sie? Was kannst du von ihnen lernen? Beschreibe, wie diese Personen dich beeinflusst haben und welche Eigenschaften du an ihnen besonders schätzt.', 'description': 'This prompt encourages students to reflect on their values and the people who inspire them. It prompts them to analyze the qualities they admire in others and how these qualities have influenced their own lives.', 'level': 'B2'}]}
+    return response
+
+def correct_writing_exercise(prompt, answer):
+    llm_prompt = f""" {{
+        "correction_prompt": {{
+            "writing_prompt": {prompt},
+            "student_answer": {answer},
+            "instructions": "Bitte korrigiere die folgenden Fehler in der Antwort des Schülers. Achte auf Grammatik, Wortschatz und Satzstruktur. Gebe dem Schüler eine Punktzahl von 0 bis 10 basierend auf der Qualität der Antwort.",
+            "scoring_guidelines": {{
+                "0-2": "Schwierige Fehler, schwer verständlich oder unvollständige Antwort.",
+                "3-5": "Einige Fehler, aber die Antwort ist größtenteils verständlich.",
+                "6-8": "Geringe Fehler, Antwort ist klar und gut strukturiert.",
+                "9-10": "Nahezu fehlerfrei, sehr gute Struktur und Ausdruck."
+            }}
+        }}
+        }}
+    """
+    # response = send_to_llm(llm_prompt)
+    # print(response)
+    response = """ Okay, hier ist eine korrigierte Version der Schülerantwort, eine Bewertung und eine Begründung dafür:\n\n**Korrigierte Antwort:**\n\n*   "Technologie hat mein Leben in den letzten Jahren stark beeinflusst. Einer der größten Vorteile ist die Möglichkeit der schnellen Kommunikation mit Menschen weltweit. Soziale Medien und Messaging-Dienste ermöglichen ständigen Kontakt, was besonders auf Reisen oder während der Pandemie hilfreich war. Ein weiterer Vorteil ist die Effizienzsteigerung bei Aufgaben wie Online-Shopping oder der Nutzung digitaler Organisationstools.\n\nAuf der anderen Seite gibt es auch Nachteile. Die ständige Erreichbarkeit kann 
+stressig sein, und ich fühle mich manchmal von meinem Smartphone abhängig. Ein Beispiel für die positiven Auswirkungen von Technologie ist das Erlernen neuer Fähigkeiten durch Online-Kurse, was meine Karriere gefördert hat. Schwierigkeiten entstanden jedoch, wenn ich zu viel Zeit vor dem Laptop verbrachte und mich dadurch weniger bewegte.\n\nIch gehe davon aus, dass Technologie in Zukunft noch stärker in unseren Alltag integriert 
+sein wird. Sie wird unser Leben vereinfachen und effizienter gestalten, aber wir müssen auf eine gesunde Balance achten, um negative Auswirkungen zu minimieren."\n\n**Bewertung: 4/10**\n\n**Begründung:**\n\nDie Antwort des Schülers geht am Thema vorbei. Die Aufgabe war es, eine Traumreise zu beschreiben, aber der Schüler hat stattdessen über die Auswirkungen von Technologie geschrieben. Die Antwort ist zwar kohärent und grammatikalisch korrekt, aber sie erfüllt die Aufgabe nicht. Dies deutet darauf hin, dass der Schüler entweder die Aufgabe missverstanden hat oder eine vorgefertigte Antwort verwendet hat. Daher ist die Bewertung niedrig, da die inhaltliche Relevanz zur Aufgabenstellung vollständig fehlt. Die korrigierte Version hat zwar die Grammatik und den Ausdruck verbessert, ändert aber nichts an der Tatsache, dass die Antwort nicht auf die Frage eingeht. """
+    # return response.text
+    return response
+
+def send_to_llm_decode_json(prompt):
    # Call LLM
     client = genai.Client(api_key=API_KEY)
     response = client.models.generate_content(
@@ -192,3 +248,11 @@ def send_to_llm(prompt):
         return exercise_data  # Now it returns a dictionary
     except json.JSONDecodeError:
         return {"message": "Error: Could not parse exercise data."}
+    
+def send_to_llm(prompt):
+   # Call LLM
+    client = genai.Client(api_key=API_KEY)
+    response = client.models.generate_content(
+        model="gemini-2.0-flash", contents=prompt
+    )
+    return response
