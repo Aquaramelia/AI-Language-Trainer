@@ -1,8 +1,8 @@
 import datetime
 import random
 import pandas as pd
-from sqlalchemy import func
-from database.db_models_exercises import NounArticlesRegular, NounArticleRegularExercise, Verb, VerbExercise, NounArticlesIrregular, NounArticleIrregularExercise, DateEntry
+from sqlalchemy import delete, func, tuple_
+from database.db_models_exercises import NounArticlesRegular, NounArticleRegularExercise, Verb, VerbExercise, NounArticlesIrregular, NounArticleIrregularExercise, DateEntry, WritingExercise, WritingTopic
 from database.db_models_general import SessionLocal, Vocabulary, Exercise
 
 def log_exercise(user_id, word_id, correct, level):
@@ -143,17 +143,56 @@ def log_noun_irregular_article_exercise(user_id, noun_id, correct):
     session.close()
     log_date_entry(user_id=user_id)
 
-def log_date_entry(user_id, date=None):
+def log_date_entry(user_id, date=datetime.date.today()):
     session = SessionLocal()
-    todays_date = datetime.date.today()
-    existing_date = session.query(DateEntry).filter_by(user_id=user_id, date=todays_date).first()
+    existing_date = session.query(DateEntry).filter_by(user_id=user_id, date=date).first()
     if existing_date:
         existing_date.practice_count += 1
     else:
         practice_count = 1
-        new_date_entry = DateEntry(user_id=user_id, date=todays_date, practice_count=practice_count)
+        new_date_entry = DateEntry(user_id=user_id, date=date, practice_count=practice_count)
         session.add(new_date_entry)
     session.commit()
+    session.close()
+    
+def log_writing_exercise(user_id, title, prompt, answer, correction, level):
+    session = SessionLocal()
+    existing_exercise = session.query(WritingExercise).filter_by(user_id=user_id, title=title, prompt=prompt).first()
+    if existing_exercise:
+        existing_exercise.answer = answer
+        existing_exercise.correction = correction
+    else:
+        new_exercise = WritingExercise(user_id=user_id, title=title, prompt=prompt, answer=answer, correction=correction, level=level)
+        session.add(new_exercise)
+    session.commit()
+    session.close()
+    if correction:
+        remove_completed_topic(user_id=user_id, title=title, prompt=prompt, level=level)
+
+def remove_completed_topic(user_id, title, prompt, level):
+    session = SessionLocal()
+    existing_topic = session.query(WritingTopic).filter_by(user_id=user_id, title=title, prompt=prompt, level=level).first()
+    if existing_topic:
+        session.delete(existing_topic)
+        session.commit()
+    session.close()    
+
+def save_new_writing_topics(user_id, topics):
+    session = SessionLocal()
+    if topics:
+        session.execute(delete(WritingTopic))
+        print(f"Saved topics: {topics}")
+        for topic in topics:
+            existing_topic = session.query(WritingExercise).filter_by(user_id=user_id, title=topic["title"], prompt=topic["prompt"]).first()
+            if not existing_topic:
+                existing_topic = session.query(WritingTopic).filter_by(user_id=user_id, title=topic["title"], prompt=topic["prompt"]).first()
+            print(existing_topic)
+            if existing_topic:
+                continue
+            else:
+                new_topic = WritingTopic(user_id=user_id, title=topic["title"], prompt=topic["prompt"], level=topic["level"])
+                session.add(new_topic)
+        session.commit()
     session.close()
     
 def get_practice_data(user_id=1, start_date=None, end_date=None):
@@ -263,3 +302,77 @@ def get_difficult_irregular_articles(limit=5):
     session.close()
     # Convert to list of dictionaries while excluding 'exercises'
     return [{col.name: getattr(noun, col.name) for col in NounArticlesIrregular.__table__.columns if col.name != "exercises"} for noun in nouns]
+
+def get_writing_exercises(user_id):
+    session = SessionLocal()
+    essays = (
+        session.query(WritingExercise.title)
+        .filter(WritingExercise.user_id == user_id)
+        .all()
+    )
+    session.close()
+    return essays
+
+def get_essay_content(title):
+    session = SessionLocal()
+    essay = (
+        session.query(WritingExercise)
+        .filter(WritingExercise.title == title)
+        .first()
+    )
+    session.close()
+    return {
+        "prompt": essay.prompt,
+        "answer": essay.answer,
+        "level": essay.level,
+        "correction": essay.correction
+    }
+
+def get_writing_topics(user_id):
+    session = SessionLocal()
+    topics = (
+        session.query(WritingTopic)
+        .filter(WritingTopic.user_id == user_id)
+        .all()
+    )
+    session.close()
+    print(f"Retrieved topics: {topics}")
+    topic_pairs = [(topic.title, topic.prompt) for topic in topics]
+    if topic_pairs:
+        exercises = (
+            session.query(WritingExercise)
+            .filter_by(user_id=user_id)
+            .filter(
+                tuple_(WritingExercise.title, WritingExercise.prompt).in_(topic_pairs)
+            )
+            .all()
+        )
+    else:
+        exercises = []
+        
+    exercise_key_set = set((ex.title, ex.prompt) for ex in exercises)
+    exercise_dicts = [
+        {
+            "title": ex.title,
+            "prompt": ex.prompt,
+            "answer": ex.answer,
+            "correction": ex.correction,
+            "level": ex.level,
+        }
+        for ex in exercises
+    ]
+    
+    topic_only_dicts = [
+        {
+            "title": topic.title,
+            "prompt": topic.prompt,
+            "answer": None,
+            "correction": None,
+            "level": getattr(topic, "level", "B1"),
+        }
+        for topic in topics
+        if (topic.title, topic.prompt) not in exercise_key_set
+    ]
+
+    session.close()
+    return exercise_dicts + topic_only_dicts

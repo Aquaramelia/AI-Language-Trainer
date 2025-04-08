@@ -63,7 +63,7 @@ def generate_verb_exercise():
 
     """
 
-    response = send_to_llm(question_prompt)
+    response = send_to_llm_decode_json(question_prompt)
     return response
 
 
@@ -109,7 +109,7 @@ def generate_vocabulary_exercise(level):
           "choices": ["Auto", "Lampe", "Handy"]
       }}
     """
-    response = send_to_llm(question_prompt)
+    response = send_to_llm_decode_json(question_prompt)
     # print(response)
     # response = {'questions': [{'word_id': 2, 'question': 'Ist ___ in Ordnung?', 'correct_answer': 'alles'}, {'word_id': 143, 'question': 'Darf ich mich Ihnen ___?', 'correct_answer': 'vorstellen'}, 
 # {'word_id': 410, 'question': 'Das Essen ist sehr ___. ', 'correct_answer': 'lecker'}, {'word_id': 445, 'question': 'Wir treffen uns ___ 10 Uhr.', 'correct_answer': 'um'}, {'word_id': 
@@ -179,7 +179,56 @@ def generate_noun_irregular_article_exercise(limit=10):
 
     return {"questions": questions}
 
-def send_to_llm(prompt):
+def generate_writing_exercise():
+    question_prompt = """ 
+    Create a list of 5 essay or short writing prompts suitable for A1-C1 level German learners. The topics should be engaging, encouraging students to express their opinions and reflect on personal experiences. Each prompt should be clear and straightforward, allowing for creative responses. The prompts should vary in style, with some focusing on personal experience, while others encourage opinion-based writing. Provide the title of the prompt and the actual prompt to explain the writing task. Include imaginative prompts. Output in a **valid JSON format** as follows:
+    {
+        "writing_prompts": [
+            {
+                "prompt": "Beschreibe deinen letzten Urlaub. Wo bist du hingefahren und was hast du dort gemacht?",
+                "level": "A1"
+            },
+            {
+                "prompt": "Was sind deine Hobbys und warum machst du sie gerne? Erkläre, was dir an deinen Hobbys am meisten Spaß macht.",
+                "level": "A2"
+            },
+            {
+                "prompt": "Stell dir vor, du könntest einen Tag lang jemand anderes sein. Wer würdest du sein und was würdest du an diesem Tag tun?",
+                "level": "B1"
+            },
+            {
+                "prompt": "Was denkst du über den Klimawandel? Welche Maßnahmen sollten deiner Meinung nach ergriffen werden, um die Umwelt zu schützen?",
+                "level": "B2"
+            },
+            {
+                "prompt": "Was sind die wichtigsten Eigenschaften einer guten Freundschaft? Erkläre, was du von deinen Freunden erwartest und was eine Freundschaft für dich bedeutet.",
+                "level": "C1"
+            }
+        ]
+    }
+    """
+    response = send_to_llm_decode_json(prompt=question_prompt)
+    return response
+
+def correct_writing_exercise(prompt, answer):
+    llm_prompt = f""" {{
+        "correction_prompt": {{
+            "writing_prompt": {prompt},
+            "student_answer": {answer},
+            "instructions": "Gib mir freundliches Feedback zu meinem Text. Korrigiere meine Antwort (Grammatik, Wortwahl, Satzbau), und erkläre kurz, was ich verbessern kann. Nutze **Markdown** und **Emojis** für ein lebendigeres Feedback. Sei ermutigend und positiv! Am Ende gib mir bitte eine Punktzahl von 0 bis 10.",
+            "scoring_guidelines": {{
+                "0-2": "Viele Fehler 😕 – schwer verständlich oder unvollständig.",
+                "3-5": "Einige Fehler 🙃 – aber meistens verständlich.",
+                "6-8": "Nur wenige Fehler 🙂 – klar und gut geschrieben.",
+                "9-10": "Nahezu perfekt 🤩 – super formuliert und sehr verständlich!"
+            }}
+        }}
+    }}"""
+
+    response = send_to_llm(llm_prompt)
+    return response.text
+
+def send_to_llm_decode_json(prompt):
    # Call LLM
     client = genai.Client(api_key=API_KEY)
     response = client.models.generate_content(
@@ -192,3 +241,11 @@ def send_to_llm(prompt):
         return exercise_data  # Now it returns a dictionary
     except json.JSONDecodeError:
         return {"message": "Error: Could not parse exercise data."}
+    
+def send_to_llm(prompt):
+   # Call LLM
+    client = genai.Client(api_key=API_KEY)
+    response = client.models.generate_content(
+        model="gemini-2.0-flash", contents=prompt
+    )
+    return response
