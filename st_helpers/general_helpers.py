@@ -5,10 +5,8 @@ def set_background(image_url="https://www.transparenttextures.com/patterns/debut
     <style>
         html, body, .stApp {{
             background-color: transparent;
-            background-image: url("https://www.transparenttextures.com/patterns/debut-light.png"), linear-gradient(62deg, rgb(79, 167, 255) 0%, rgb(207, 158, 255) 100%);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-image: url({image_url}), linear-gradient(62deg, rgb(19, 109, 198) 0%, rgb(181, 108, 255) 100%);
+            background-repeat: repeat;
         }}
 
         h1 {{
