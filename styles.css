@@ -32,7 +32,8 @@ h3 {
   font-weight: normal !important;
 }
 
-h1 a {
+h1 a,
+h2 a {
    display: none !important;
 }
 
@@ -230,8 +231,25 @@ input p {
 
 /* Chat element styles */
 .stChatMessage * {
-   font-size: 100% !important;
+   font-size: 97% !important;
    font-family: "Delius" !important;
+   text-align: justify;
+}
+
+[class*="st-key-response-container-"] {
+   background-color: #5185ff73;
+   border-radius: 20px;
+   margin: 10px;
+   box-shadow: -1px 1px 5px #7561ff;
+   padding: 10px 50px 5px 10px;
+}
+
+[data-testid="stChatMessageAvatarAssistant"] {
+   background-color: rgb(255, 254, 180);
+}
+
+.st-emotion-cache-18qnold {
+   background-color: rgb(255, 176, 137);
 }
 
 /* Submit button styles */
@@ -382,4 +400,13 @@ th p {
    outline: 0;
    font-size: 80% !important;
    color: black;
+}
+
+/* Tab styles */
+[data-testid="stTab"]:focus {
+   color: rgb(0, 40, 255);
+}
+
+[data-testid="stTab"]:hover {
+   color: rgb(29, 255, 244);
 }
