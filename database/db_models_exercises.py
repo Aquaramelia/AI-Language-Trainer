@@ -95,6 +95,28 @@ class DateEntry(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     practice_count = Column(Integer)
     date = Column(Date, default=lambda: datetime.date.today(), unique=True)
+    
+class WritingExercise(Base):
+    __tablename__ = "writing_exercises"
+    __table_args__ = {"extend_existing": True}
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    title = Column(String)
+    prompt = Column(String)
+    level = Column(String)
+    answer = Column(String)
+    correction = Column(String)
+
+class WritingTopic(Base):
+    __tablename__ = "writing_topics"
+    __table_args__ = {"extend_existing": True}
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    title = Column(String)
+    prompt = Column(String)
+    level = Column(String)
 
 # Apply the changes
 Base.metadata.create_all(engine)
