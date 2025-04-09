@@ -92,12 +92,30 @@ div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
 [class*="st-key-question-container-"]  {
   font-size: 90% !important;
   background-color: #0900268f !important;
+  border: 2px solid #00cfffc4;
+}
+
+#essay-prompt {
+  font-size: 80% !important;
+}
+
+#essay-index-prompt {
+  font-size: 85% !important;
+}
+
+#essay-index-prompt p {
+   margin-bottom: 0 !important;
 }
 
 [class*="st-key-essay-index-title"] h2, 
 [class*="st-key-question-container-"] h2 {
   font-size: 100% !important;
   font-family: "Delius" !important;
+}
+
+[class*="st-key-essay-index-title"] h2 {
+   text-align: right !important;
+   padding-right: 2em;
 }
 
 [class*="st-key-essay-index-content"],
@@ -108,7 +126,7 @@ div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
    /* margin: 2rem; */
    padding: calc(var(--top-space) - 0.5lh) 3rem 1rem 5.5rem;
    font-family: "Balsamiq sans" !important;
-   font-size: 1.5rem !important;
+   font-size: 1.35rem !important;
    line-height: 1.6;
    color: var(--ink-color);
    background-image: 
@@ -135,6 +153,18 @@ div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
          transparent 1lh
       );
    box-shadow: 0 0 1rem rgb(0 0 0 / 0.25);
+}
+
+[class*="st-key-essay-index-content"] {
+   padding: calc(var(--top-space) - 0.5lh) 1rem 1rem 3rem !important;
+}
+
+[class*="st-key-essay-index-title"] {
+   text-align: right !important;
+}
+
+[class*="st-key-essay-index-content"] p {
+   margin: 1.5em !important;
 }
 
 [class*="st-key-question-container-"] .stTextArea label p {
@@ -250,6 +280,15 @@ input p {
    padding: 10px 50px 5px 10px;
 }
 
+[class*="st-key-response-index-container-"] {
+   background-color: #1a005494;
+   border-radius: 20px;
+   margin: 10px;
+   margin-top: 1px;
+   box-shadow: -1px 1px 5px #7561ff;
+   padding: 10px 50px 5px 10px;
+}
+
 [data-testid="stChatMessageAvatarAssistant"] {
    background-color: rgb(255, 254, 180);
 }
@@ -313,7 +352,7 @@ td p {
 }
 
 th p {
-   color: rgba(222, 255, 184, 0.74);
+   color: rgba(117, 238, 251, 1);
 }
 
 .stTable * {
@@ -333,7 +372,8 @@ th p {
 [class*="st-key-heatmap-parent-container"] {
    border-radius: 15px !important;
    padding: 0 30px !important;
-   background-color: #0900268f !important;
+   background-color: #090026bf !important;
+   border: 2px solid #00dbffe3;
 }
 
 .g-gtitle * {
@@ -343,9 +383,10 @@ th p {
 /* Pie chart styles */
 [class*="st-key-question-chart-"]  {
    font-size: 90% !important;
-   background-color: #0900268f !important;
+   background-color: #090026bf !important;
    border-radius: 15px !important;
    padding: 15px;
+   border: 2px solid #00dbffe3;
 }
 
 /* Bar chart styles */
@@ -353,7 +394,8 @@ th p {
 [class*="st-key-chart-parent-container"] {
    border-radius: 15px !important;
    padding: 0 60px !important;
-   background-color: #0900268f !important;
+   background-color: #090026bf !important;
+   border: 2px solid #00dbffe3;
 }
 
 [class*="st-key-chart-child-container"] {
@@ -369,7 +411,7 @@ th p {
 
 [data-testid="stCaptionContainer"] * {
    font-size: 90% !important;
-   color: #a1b0ff;
+   color: rgba(117, 238, 251, 1);
 }
 
 /* Paper texture style */
@@ -404,7 +446,6 @@ th p {
    font-family: "Delius" !important;
    line-height: 32px;
    outline: 0;
-   font-size: 80% !important;
    color: black;
 }
 
@@ -421,8 +462,5 @@ th p {
 
 [class*="st-key-essay-index-title"] span.is-badge {
    padding-top: 10px;
-}
-
-[class*="st-key-essay-index-title"] * {
-   text-align: center;
+   margin-left: 1.5em;
 }

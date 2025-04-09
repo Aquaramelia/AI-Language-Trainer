@@ -102,7 +102,7 @@ for i, tab in enumerate(tab_objs):
             st.header(questions[i]["title"])
             colA, colB, colC = st.columns([1,5,1])
             with colB:
-                st.markdown(f'<div class="notepad"><div class="top"></div><div class="paper">{questions[i]["prompt"]}</div></div><br/>', unsafe_allow_html=True)
+                st.markdown(f'<div class="notepad"><div class="top"></div><div class="paper" id="essay-prompt">{questions[i]["prompt"]}</div></div><br/>', unsafe_allow_html=True)
                 answer = st.text_area(
                     key=f"textarea-{i}",
                     label="Hier kannst du deine Antwort eingeben:",
