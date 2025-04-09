@@ -94,11 +94,13 @@ div[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
   background-color: #0900268f !important;
 }
 
+[class*="st-key-essay-index-title"] h2, 
 [class*="st-key-question-container-"] h2 {
   font-size: 100% !important;
   font-family: "Delius" !important;
 }
 
+[class*="st-key-essay-index-content"],
 [class*="st-key-question-container-"] textarea {
   font-size: 100% !important;
   font-family: "Balsamiq sans" !important;
@@ -209,6 +211,10 @@ input p {
 
 [data-testid="stSelectboxVirtualDropdown"] * {
    font-size: 105% !important;
+}
+
+[data-testid="stSelectboxVirtualDropdown"] * {
+   font-size: 85% !important;
 }
 
 [class*="st-key-question-container-"] [data-baseweb="button-group"] p {
@@ -409,4 +415,14 @@ th p {
 
 [data-testid="stTab"]:hover {
    color: rgb(29, 255, 244);
+}
+
+/* Essay index styles */
+
+[class*="st-key-essay-index-title"] span.is-badge {
+   padding-top: 10px;
+}
+
+[class*="st-key-essay-index-title"] * {
+   text-align: center;
 }
