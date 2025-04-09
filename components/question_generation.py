@@ -228,6 +228,72 @@ def correct_writing_exercise(prompt, answer):
     response = send_to_llm(llm_prompt)
     return response.text
 
+def generate_reading_exercise(level):
+    llm_prompt = f""" 
+    Create a German reading exercise for {level} level learners. The exercise should include a short, engaging passage (150-200 words) that is relevant to everyday life and cultural topics. After the passage, generate 5 comprehension questions in German. The questions should assess understanding of key details, the overall meaning, and encourage deeper reflection. Provide answers to the questions as well.
+    Example output:
+    {{        
+    "reading_exercise": {{
+        "text": "Im Winter gehen viele Menschen gerne in den Wald, um einen Spaziergang zu machen. Der Schnee bedeckt die Bäume und der Boden ist ganz ruhig. Es gibt keine lauten Geräusche, nur das Knirschen des Schnees unter den Schuhen. Besonders schön ist es, wenn die Sonne durch die Bäume scheint und der Schnee in vielen verschiedenen Farben glitzert. Viele Menschen sagen, dass sie sich nach einem Winterspaziergang erfrischt und entspannter fühlen.",
+        "title": "Ein Spaziergang im Winterwald",
+        "questions": [
+        {{
+            "question": "Warum gehen viele Menschen im Winter in den Wald?",
+            "choices": [
+            "Um sich zu entspannen und den Wald zu genießen.",
+            "Um Bäume zu fällen.",
+            "Um Tiere zu jagen.",
+            "Um Schnee zu schaufeln."
+            ],
+            "correct_answer": "Um sich zu entspannen und den Wald zu genießen."
+        }},
+        {{
+            "question": "Was bedeckt der Schnee im Wald?",
+            "choices": [
+            "Nur die Bäume.",
+            "Nur den Boden.",
+            "Die Bäume und den Boden.",
+            "Nur die Häuser."
+            ],
+            "correct_answer": "Die Bäume und den Boden."
+        }},
+        {{
+            "question": "Wie fühlt sich der Boden an, wenn man darauf geht?",
+            "choices": [
+            "Er ist matschig und rutschig.",
+            "Er ist ruhig und man hört das Knirschen.",
+            "Er ist hart und trocken.",
+            "Er ist weich und feucht."
+            ],
+            "correct_answer": "Er ist ruhig und man hört das Knirschen."
+        }},
+        {{
+            "question": "Was passiert, wenn die Sonne durch die Bäume scheint?",
+            "choices": [
+            "Der Schnee schmilzt.",
+            "Der Schnee glitzert in vielen verschiedenen Farben.",
+            "Die Bäume fallen um.",
+            "Es wird dunkel im Wald."
+            ],
+            "correct_answer": "Der Schnee glitzert in vielen verschiedenen Farben."
+        }},
+        {{
+            "question": "Wie fühlen sich die Menschen nach einem Winterspaziergang?",
+            "choices": [
+            "Ermüdet und traurig.",
+            "Erfrischt und entspannter.",
+            "Verwirrt und müde.",
+            "Langweilig und hungrig."
+            ],
+            "correct_answer": "Erfrischt und entspannter."
+        }}
+        ]
+    }}
+    }}
+    """
+    response = send_to_llm_decode_json(llm_prompt)
+    return response
+
 def send_to_llm_decode_json(prompt):
    # Call LLM
     client = genai.Client(api_key=API_KEY)
