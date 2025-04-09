@@ -303,30 +303,38 @@ def get_difficult_irregular_articles(limit=5):
     # Convert to list of dictionaries while excluding 'exercises'
     return [{col.name: getattr(noun, col.name) for col in NounArticlesIrregular.__table__.columns if col.name != "exercises"} for noun in nouns]
 
-def get_writing_exercises(user_id):
+def get_essay_index(user_id):
     session = SessionLocal()
     essays = (
-        session.query(WritingExercise.title)
+        session.query(WritingExercise)
         .filter(WritingExercise.user_id == user_id)
         .all()
     )
     session.close()
-    return essays
+    essay_dicts = [
+        {  
+            "title": e.title,
+            "level": e.level,
+        }
+        for e in essays
+    ]
+    return essay_dicts
 
-def get_essay_content(title):
+def get_essay_content(user_id, title):
     session = SessionLocal()
     essay = (
         session.query(WritingExercise)
-        .filter(WritingExercise.title == title)
+        .filter_by(user_id=user_id, title=title)
         .first()
     )
     session.close()
-    return {
-        "prompt": essay.prompt,
-        "answer": essay.answer,
-        "level": essay.level,
-        "correction": essay.correction
-    }
+    if essay:
+        return {
+            "prompt": essay.prompt,
+            "answer": essay.answer,
+            "level": essay.level,
+            "correction": essay.correction
+        }
 
 def get_writing_topics(user_id):
     session = SessionLocal()
