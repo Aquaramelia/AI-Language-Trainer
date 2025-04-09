@@ -118,6 +118,18 @@ class WritingTopic(Base):
     prompt = Column(String)
     level = Column(String)
 
+class ReadingExercise(Base):
+    __tablename__ = "reading_exercises"
+    __table_args__ = {"extend_existing": True}
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    title = Column(String)
+    text = Column(String)
+    level = Column(String)
+    score = Column(Integer)
+    total_questions = Column(Integer)
+
 # Apply the changes
 Base.metadata.create_all(engine)
 
