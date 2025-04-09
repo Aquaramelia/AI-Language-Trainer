@@ -62,7 +62,7 @@ def return_chart(data):
         labels=dict(x="Week", y="Day", color="Exercises"),
         x=all_week_ranges,
         y=weekday_order,
-        color_continuous_scale="Purpor_r",
+        color_continuous_scale="Gnbu_r",
         title="Your progress over time"
     )
 

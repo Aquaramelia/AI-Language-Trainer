@@ -2,7 +2,7 @@ import datetime
 import random
 import pandas as pd
 from sqlalchemy import delete, func, tuple_
-from database.db_models_exercises import NounArticlesRegular, NounArticleRegularExercise, Verb, VerbExercise, NounArticlesIrregular, NounArticleIrregularExercise, DateEntry, WritingExercise, WritingTopic
+from database.db_models_exercises import NounArticlesRegular, NounArticleRegularExercise, ReadingExercise, Verb, VerbExercise, NounArticlesIrregular, NounArticleIrregularExercise, DateEntry, WritingExercise, WritingTopic
 from database.db_models_general import SessionLocal, Vocabulary, Exercise
 
 def log_exercise(user_id, word_id, correct, level):
@@ -169,6 +169,21 @@ def log_writing_exercise(user_id, title, prompt, answer, correction, level):
     if correction:
         remove_completed_topic(user_id=user_id, title=title, prompt=prompt, level=level)
 
+def log_reading_exercise(user_id, title, text, level, score, total_questions):
+    session = SessionLocal()
+    exercise = ReadingExercise(
+        user_id=user_id,
+        title=title,
+        text=text,
+        level=level,
+        score=score,
+        total_questions=total_questions
+    )
+    session.add(exercise)
+    session.commit()
+    session.close()
+    log_date_entry(user_id=user_id)
+
 def remove_completed_topic(user_id, title, prompt, level):
     session = SessionLocal()
     existing_topic = session.query(WritingTopic).filter_by(user_id=user_id, title=title, prompt=prompt, level=level).first()
@@ -320,11 +335,11 @@ def get_essay_index(user_id):
     ]
     return essay_dicts
 
-def get_essay_content(user_id, title):
+def get_essay_content(user_id, title, level):
     session = SessionLocal()
     essay = (
         session.query(WritingExercise)
-        .filter_by(user_id=user_id, title=title)
+        .filter_by(user_id=user_id, title=title, level=level)
         .first()
     )
     session.close()
