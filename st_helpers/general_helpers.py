@@ -1,3 +1,4 @@
+from ast import literal_eval
 import streamlit as st
 
 def set_background(image_url="https://www.transparenttextures.com/patterns/debut-light.png"):
@@ -33,3 +34,23 @@ def complete_sentence(question_data):
     completed_sentence = "".join(part + (answers[i] if i < len(answers) else "") for i, part in enumerate(parts))
 
     return completed_sentence
+
+def safe_join(value):
+    """
+    Converts a value to a comma-separated string if it's a list or a string representing a list.
+    """
+    # If it's a list already, join its string representations.
+    if isinstance(value, list):
+        return ", ".join(str(item) for item in value)
+    # If it's a string, try parsing it to a list.
+    elif isinstance(value, str):
+        try:
+            parsed = literal_eval(value)
+            if isinstance(parsed, list):
+                return ", ".join(str(item) for item in parsed)
+            else:
+                return value
+        except Exception:
+            return value
+    else:
+        return str(value)
