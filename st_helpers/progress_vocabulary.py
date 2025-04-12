@@ -19,9 +19,9 @@ def return_chart(level, levelTitle, graphTitle, colormap, caption):
 
     # Data for pie chart
     labels = [
-        "Vocabulary - Learnt", 
-        "Vocabulary - In progress", 
-        "Vocabulary - Unexplored"
+        "Learnt Vocabulary", 
+        "In Progress Vocabulary", 
+        "Unexplored Vocabulary"
         ]
     values = [
         learnt_vocabulary, 
@@ -43,7 +43,7 @@ def return_chart(level, levelTitle, graphTitle, colormap, caption):
             {point.y:.0f} words - {point.percentage:.0f}%
         </div>
     """
-    chart.tooltip.style = {"color": "#ffffff"}
+    chart.tooltip.style = {"color": "#ffffff", "fontFamily": "Delius"}
     chart.tooltip.backgroundColor = "#caabffaa"
     # Add data
     chart.cAxis = colormap
@@ -55,6 +55,12 @@ def return_chart(level, levelTitle, graphTitle, colormap, caption):
     chart.legend.enabled = False
     chart.exporting.enabled = False
     chart.yAxis.labels.style = {"color": "#ffffff"}
+    chart.plotOptions.variablepie.dataLabels = {
+        "style": {
+            "fontFamily": "Delius",
+            "fontSize": "77%"
+        }
+    }
     # "sliced": True if i == 0 else False to have the first piece protrude a litle
     chart.plot(
         [{"name": label, "y": value, "sliced": True if i == 0 else False} for i, (label, value) in enumerate(zip(labels, values))]

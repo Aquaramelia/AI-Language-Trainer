@@ -19,9 +19,9 @@ def return_chart():
 
     # Data for pie chart
     labels = [
-        "Verb tense forms - Learnt", 
-        "Verb tense forms - In progress", 
-        "Verb tense forms - Unexplored"
+        "Learnt Verbs", 
+        "In Progress Verbs", 
+        "Unexplored Verbs"
         ]
     values = [
         learnt_verbs, 
@@ -41,7 +41,7 @@ def return_chart():
             {point.y:.0f} verbs - {point.percentage:.0f}%
         </div>
     """
-    chart.tooltip.style = {"color": "#ffffff"}
+    chart.tooltip.style = {"color": "#ffffff", "fontFamily": "Delius"}
     chart.tooltip.backgroundColor = "#caabffaa"
     chart.cAxis = "rdpu"
     chart.chart.backgroundColor = "rgba(0, 0, 0, 0)"
@@ -52,6 +52,20 @@ def return_chart():
     chart.legend.enabled = False
     chart.exporting.enabled = False
     chart.yAxis.labels.style = {"color": "#ffffff"}
+    chart.plotOptions.pie.dataLabels = {
+        "enabled": True,
+        "style": {
+            "fontFamily": "Delius",
+            "fontSize": "77%"
+        }
+    }
+    with chart.plotOptions.pie as options:
+        options.startAngle = -90
+        options.endAngle = 90
+
+        # recenter the plot in the middle of the plot area
+        options.center = ["50%", "75%"]
+        
     # "sliced": True if i == 0 else False to have the first piece protrude a litle
     chart.plot(
         [{"name": label, "y": value, "sliced": True if i == 0 else False} for i, (label, value) in enumerate(zip(labels, values))],

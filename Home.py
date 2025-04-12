@@ -74,7 +74,8 @@ with col4:
     with st.container(
         key="question-chart-vocabulary-4"
     ):
-        selected_level = ""        
+        selected_level = ""
+        st.markdown('<style>[data-testid="stSelectboxVirtualDropdown"] * {font-size: 100% !important;}</style>', unsafe_allow_html=True)    
         level = st.selectbox(
             key="selectbox-vocabulary-level",
             options=available_modes.keys(),

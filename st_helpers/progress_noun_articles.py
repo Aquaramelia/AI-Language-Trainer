@@ -22,12 +22,12 @@ def return_chart():
 
     # Data for pie chart
     labels = [
-        "Regular articles - Learnt", 
-        "Regular articles - In progress", 
-        "Irregular articles - Learnt", 
-        "Irregular articles - In progress", 
-        "Regular articles - Unexplored",
-        "Irregular articles - Unexplored"
+        "Learnt Regular", 
+        "In Progress Regular", 
+        "Learnt Irregular", 
+        "In Progress Irregular", 
+        "Unexplored Regular",
+        "Unexplored Irregular"
         ]
     values = [
         learnt_regular, 
@@ -52,7 +52,7 @@ def return_chart():
             {point.y:.0f} nouns - {point.percentage:.0f}%
         </div>
     """
-    chart.tooltip.style = {"color": "#ffffff"}
+    chart.tooltip.style = {"color": "#ffffff", "fontFamily": "Delius"}
     chart.tooltip.backgroundColor = "#caabffaa"
     # Add data
     chart.cAxis = "purd"
@@ -64,6 +64,20 @@ def return_chart():
     chart.legend.enabled = False
     chart.exporting.enabled = False
     chart.yAxis.labels.style = {"color": "#ffffff"}
+    chart.plotOptions.pie.dataLabels = {
+        "enabled": True,
+        "style": {
+            "fontFamily": "Delius",
+            "fontSize": "77%"
+        }
+    }
+    with chart.plotOptions.pie as options:
+        options.startAngle = -90
+        options.endAngle = 90
+
+        # recenter the plot in the middle of the plot area
+        options.center = ["50%", "75%"]
+        
     # "sliced": True if i == 0 else False to have the first piece protrude a litle
     chart.plot(
         [{"name": label, "y": value, "sliced": True if i == 0 else False} for i, (label, value) in enumerate(zip(labels, values))],

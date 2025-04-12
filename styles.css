@@ -389,6 +389,15 @@ th p {
    border: 2px solid #00dbffe3;
 }
 
+.highcharts-data-labels .highcharts-series-0 .highcharts-variablepie-series .highcharts-tracker *,
+.highcharts-data-labels *,
+.highcharts-label *,
+.highcharts-data-label *,
+.highcharts-label text {
+   font-family: "Delius" !important;
+   font-size: 90% !important;
+}
+
 /* Bar chart styles */
 
 [class*="st-key-chart-parent-container"] {
