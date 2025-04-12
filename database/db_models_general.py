@@ -5,11 +5,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
+# DATABASE_URL = "sqlite:///language_trainer.db"
 # Set echo=False to silence logs
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL, echo=False)
 
 # Base class for our ORM models
 Base = declarative_base()
+
 
 # User Model
 

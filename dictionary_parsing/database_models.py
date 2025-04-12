@@ -1,7 +1,13 @@
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import declarative_base, sessionmaker
+import os
+from dotenv import load_dotenv
 
-DATABASE_URL = "sqlite:///dict_database.db"
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_DICT_URL")
+
+# DATABASE_URL = "sqlite:///dict_database.db"
+
 engine = create_engine(DATABASE_URL, echo=False)
 Base = declarative_base()
 
