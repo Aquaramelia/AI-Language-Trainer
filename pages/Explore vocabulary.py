@@ -1,11 +1,10 @@
 import re
-from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, JsCode, StAggridTheme
-from st_helpers.aggrid_html_cell_renderer import HtmlCellRenderer
 import streamlit as st
 from database.db_helpers_dictionary import get_category_all, get_categories
 from st_helpers.general_helpers import set_background, load_css
 import pandas as pd
 from st_helpers.general_helpers import safe_join
+from st_helpers.aggrid_explore_vocabulary import display_grid
 
 st.set_page_config(
     page_title="Explore Vocabulary - AI Language Trainer",
@@ -24,7 +23,7 @@ if "last_word_displayed" not in st.session_state:
 if "last_category" not in st.session_state:
     st.session_state.last_category = ""
 if "last_category_dataframe" not in st.session_state:
-    st.session_state.last_category_dataframe = pd.DataFrame()
+    st.session_state.last_category_dataframe = None
 
 categories = get_categories()
 
@@ -39,10 +38,10 @@ st.markdown("""
 with st.container(
     key="question-container-"
 ):
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([1, 2])
     category_selection = ""
-    matching_row = ""
-    category_df = None
+    matching_row = None
+    category_df = st.session_state.last_category_dataframe
     with col1:
         with st.container(
             key="selectbox-essay-index-container"
@@ -55,9 +54,9 @@ with st.container(
             )
             if category_selection and category_selection != st.session_state.last_category:
                 data = get_category_all(category_selection)
-                st.toast("Retrieving category data...")
+                st.code(f"🔍 Loaded {len(data)} entries from category: {category_selection}")
+                st.toast("Retrieving category data...", icon="⏳")
                 category_df = pd.DataFrame(data)
-                category_df = category_df[["word", "senses", "forms", "glosses", "examples"]].copy()
                 category_df["senses_joined"] = category_df["senses"].apply(safe_join)
                 
                 category_df["word_md"] = category_df.apply(
@@ -65,66 +64,28 @@ with st.container(
                 )
                 st.session_state.last_category = category_selection
                 st.session_state.last_category_dataframe = category_df
-            else:
-                category_df = st.session_state.last_category_dataframe
                 
-            CustomHtmlCellRenderer = JsCode(HtmlCellRenderer)
-            
-            custom_theme = StAggridTheme(base="quartz").withParams(
-                fontSize=16,
-                rowBorder=False,
-                backgroundColor="#273aa4c7",
-                foregroundColor="#fff"
-            ).withParts('iconSetAlpine')  
+            if category_df is not None:
+                grid_response = display_grid(category_df=category_df, category_selection=category_selection)
 
-            gb = GridOptionsBuilder.from_dataframe(category_df[["word_md"]])
-            gb.configure_column(
-                "word_md",
-                header_name=f"Words in category: {category_selection}",
-                # cellRenderer="function(params) { return params.value; }",
-                cellRenderer=CustomHtmlCellRenderer
-            )
-
-            gb.configure_selection(
-                selection_mode="single",
-                suppressRowDeselection=True,
-                suppressRowClickSelection=False,
-                pre_selected_rows=[0]
-            )
-
-            grid_options = gb.build()
-            grid_options["masterDetail"] = False
-
-            # Display grid
-            grid_response = AgGrid(
-                category_df[["word_md"]],
-                gridOptions=grid_options,
-                height=600,
-                width='100%',
-                update_mode=GridUpdateMode.SELECTION_CHANGED,
-                allow_unsafe_jscode=True,
-                enable_enterprise_modules=False,
-                fit_columns_on_grid_load=True,
-                theme=custom_theme
-            )
-
-            # Get selected row
-            selected = grid_response['selected_rows']
-            selected_word = ""
-            if selected is not None:
-                selected_word_md = selected.iloc[0]["word_md"]  # Extract the selected word_md
-                print(selected_word_md)
-                if selected_word_md is not None:
-                    # Use regex to extract the word between <b> and </b> tags
-                    match = re.search(r'<b>(.*?)</b>', selected_word_md)
-                    if match:
-                        selected_word = match.group(1).strip()  # This will give you the word "Kohlenhydrathaushalt"
-                        st.session_state.last_word_displayed = selected_word
-            else:
-                selected_word = st.session_state.last_word_displayed
-            if selected_word:      
-                # Now find the corresponding row in the original data DataFrame using the word
-                matching_row = category_df[category_df["word"] == selected_word].iloc[0]
+                # Get selected row
+                selected = grid_response['selected_rows']
+                selected_word = ""
+                if selected is not None:
+                    selected_word_md = selected.iloc[0]["word_md"]  # Extract the selected word_md
+                    print(selected_word_md)
+                    if selected_word_md is not None:
+                        # Use regex to extract the word between <b> and </b> tags
+                        match = re.search(r'<b>(.*?)</b>', selected_word_md)
+                        if match:
+                            selected_word = match.group(1).strip()  # This will give you the word "Kohlenhydrathaushalt"
+                            st.session_state.last_word_displayed = selected_word
+                else:
+                    selected_word = st.session_state.last_word_displayed
+                if selected_word: 
+                    matching_rows = category_df[category_df["word"] == selected_word]     
+                    if not matching_rows.empty:
+                        matching_row = matching_rows.iloc[0]
         
         with col2:
             if matching_row is not None:
@@ -133,4 +94,9 @@ with st.container(
                 st.write("Senses: ", matching_row.get("senses"))
                 st.write("Glosses: ", matching_row.get("glosses"))
                 st.write("Examples: ", matching_row.get("examples"))
+                st.write("Derived: ", matching_row.get("derived"))
+                st.write("Related: ", matching_row.get("related"))
+                st.write("Antonyms: ", matching_row.get("antonyms"))
+                st.write("Synonyms: ", matching_row.get("synonyms"))
+                st.write("Hyponyms: ", matching_row.get("hyponyms"))
                 
