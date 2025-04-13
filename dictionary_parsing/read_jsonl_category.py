@@ -34,9 +34,11 @@ def main(filename, category):
         # List of senses
         # senses_list = [f.get("links", [])[0][0] for f in entry.get("senses", [])]
         senses_list = [
-            links[0][0]
+            link[0]
             for f in entry.get("senses", [])
-            if (links := f.get("links")) and len(links) > 0 and len(links[0]) > 0
+            if "links" in f and isinstance(f["links"], list)
+            for link in f["links"]
+            if isinstance(link, list) and len(link) > 0
         ]
 
         senses_list = list(set(senses_list))
@@ -46,11 +48,54 @@ def main(filename, category):
         examples_list = [entry['text'] for sublist in examples_list for entry in sublist if entry is not None]
         examples_list = list(set(examples_list))
         
-        # # List of roman versions
-        # roman_list = [f.get("roman", []) for f in entry.get("senses", [])]
-        # if roman_list:
-        #     roman_list = [entry['text'] for sublist in roman_list for entry in sublist if entry is not None]
-        #     roman_list = list(set(roman_list))
+        examples_list = examples_list + list({
+            ex["text"]
+            for sense in entry.get("senses", [])
+            for ex in sense.get("examples", [])
+            if ex and "text" in ex
+        })
+        examples_list = list(set(examples_list))
+        
+        # List of derived words
+        derived_list = [
+            f["word"]
+            for sense in entry.get("senses", []) 
+            for f in sense.get("derived", [])]
+        derived_list = list(set(derived_list))
+        
+        # List of related words
+        related_list = [
+            f["word"]
+            for sense in entry.get("senses", []) 
+            for f in sense.get("related", [])]
+        related_list = list(set(related_list))
+        
+        # List of hyponyms
+        hyponyms_list = [
+            f["word"]
+            for sense in entry.get("senses", [])
+            if sense and "hyponyms" in sense
+            for f in sense["hyponyms"]
+            if "word" in f
+        ]
+        hyponyms_list = hyponyms_list + [f["word"] for f in entry.get("hyponyms", []) if f]
+        hyponyms_list = list(set(hyponyms_list))
+        
+        # List of synonyms
+        synonyms_list = [f.get("synonyms") for f in entry.get("senses", [])]
+        synonyms_list = [x for x in synonyms_list if x is not None]
+        synonyms_list = [entry['word'] for sublist in synonyms_list for entry in sublist]
+        
+        synonyms_list = synonyms_list + [f["word"] for f in entry.get("synonyms", []) if f]
+        synonyms_list = list(set(synonyms_list))
+        
+        # List of antonyms
+        antonyms_list = [f.get("antonyms") for f in entry.get("senses", [])]
+        antonyms_list = [x for x in antonyms_list if x is not None]
+        antonyms_list = [entry['word'] for sublist in antonyms_list for entry in sublist]
+        
+        antonyms_list = antonyms_list + [f["word"] for f in entry.get("antonyms", []) if f]
+        antonyms_list = list(set(antonyms_list))
         
         # List of meanings (glosses)
         glosses_list = [f.get("glosses") for f in entry.get("senses", [])]
@@ -66,6 +111,11 @@ def main(filename, category):
             senses=str(senses_list),
             glosses=str(glosses_list),
             examples=str(examples_list),
+            related=str(related_list),
+            derived=str(derived_list),
+            hyponyms=str(hyponyms_list),
+            antonyms=str(antonyms_list),
+            synonyms=str(synonyms_list),
             category=category,
             index=i
         )
@@ -74,7 +124,7 @@ def main(filename, category):
     
  
 if __name__ == "__main__":
-    category = "Zoology"
+    category = "Ecology"
     main(
         filename=f"data/{category}.jsonl",
         category=category
