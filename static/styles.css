@@ -10,7 +10,7 @@
   font-family: 'Delius';
   font-style: normal;
   font-weight: 400;
-  src: local("Delius"), url('fonts/delius-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: local("Delius"), url('app/static/fonts/delius-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* balsamiq-sans-regular - latin */
 @font-face {
@@ -18,7 +18,7 @@
   font-family: 'Balsamiq Sans';
   font-style: normal;
   font-weight: 400;
-  src: local("Balsamiq sans") url('fonts/balsamiq-sans-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: local("Balsamiq sans") url('app/static/fonts/balsamiq-sans-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
 /* balsamiq-sans-italic - latin */
@@ -27,7 +27,7 @@
   font-family: 'Balsamiq Sans';
   font-style: italic;
   font-weight: 400;
-  src: local("Balsamiq sans italic")  url('fonts/balsamiq-sans-italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: local("Balsamiq sans italic")  url('app/static/fonts/balsamiq-sans-italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* balsamiq-sans-700 - latin */
 @font-face {
@@ -35,7 +35,7 @@
   font-family: 'Balsamiq Sans';
   font-style: normal;
   font-weight: 700;
-  src: local("Balsamiq sans bold") url('/fonts/balsamiq-sans-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: local("Balsamiq sans bold") url('app/static/fonts/balsamiq-sans-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
 /* balsamiq-sans-700italic - latin */
@@ -44,7 +44,7 @@
   font-family: 'Balsamiq Sans';
   font-style: italic;
   font-weight: 700;
-  src: local("Balsamiq sans bold italic") url('../fonts/balsamiq-sans-700italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: local("Balsamiq sans bold italic") url('app/static/fonts/balsamiq-sans-700italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
 

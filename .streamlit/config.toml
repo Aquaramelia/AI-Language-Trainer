@@ -3,3 +3,6 @@ primaryColor="#7674ff"
 backgroundColor="#10101c"
 secondaryBackgroundColor="#000000"
 textColor="#ffffff"
+
+[server]
+enableStaticServing = true

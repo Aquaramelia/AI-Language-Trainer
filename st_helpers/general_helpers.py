@@ -19,8 +19,8 @@ def set_background(image_url="https://www.transparenttextures.com/patterns/debut
     """
     st.markdown(css, unsafe_allow_html=True)
     
-def load_css(css_file_name="styles.css"):
-    move_font_files()
+def load_css(css_file_name="app/static/styles.css"):
+    # move_font_files()
     with open(css_file_name, "r") as f:
         css = f.read()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
