@@ -17,6 +17,10 @@ st.divider()
 if "session_mode" not in st.session_state or st.session_state.session_mode != "home":
     st.session_state.session_mode = "home"
 
+st.markdown("""
+    <script src="https://code.highcharts.com/modules/variable-pie.js"></script>
+""", unsafe_allow_html=True)
+
 st.sidebar.success("Select a page above to start training! 👆")
 
 col1, col2 = st.columns([1,1])
