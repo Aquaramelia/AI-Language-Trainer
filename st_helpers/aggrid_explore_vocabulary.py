@@ -25,6 +25,10 @@ def display_grid(category_df, category_selection):
         suppressRowClickSelection=False,
         pre_selected_rows=[0]
     )
+    
+    gb.configure_grid_options(
+        suppressHorizontalScroll=True
+    )
 
     grid_options = gb.build()
     grid_options["masterDetail"] = False
