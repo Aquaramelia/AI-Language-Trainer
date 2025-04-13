@@ -64,13 +64,28 @@ def add_cat_entry(
     senses,
     glosses,
     examples,
+    hyponyms,
+    synonyms,
+    antonyms,
+    derived,
+    related,
     category,
     index
 ):
     session = SessionLocal()
     existing_entry = session.query(CategoryEntry).filter_by(word=word).first()
-    if existing_entry: 
-        print("Existing in dictionary: ", word)
+    if existing_entry:
+        print("Updating existing entry:", word)
+        existing_entry.forms = forms
+        existing_entry.senses = senses
+        existing_entry.glosses = glosses
+        existing_entry.examples = examples
+        existing_entry.hyponyms = hyponyms
+        existing_entry.antonyms = antonyms
+        existing_entry.synonyms = synonyms
+        existing_entry.related = related
+        existing_entry.derived = derived
+        existing_entry.category = category
     else:
         entry = CategoryEntry(
             word=word,
@@ -78,9 +93,14 @@ def add_cat_entry(
             senses=senses,
             glosses=glosses,
             examples=examples,
+            hyponyms=hyponyms,
+            antonyms=antonyms,
+            synonyms=synonyms,
+            related=related,
+            derived=derived,
             category=category
         )
         session.add(entry)
-        session.commit()
         print("Added to dictionary: ", word, f"[{index} words remaining]")
+    session.commit()  
     session.close()

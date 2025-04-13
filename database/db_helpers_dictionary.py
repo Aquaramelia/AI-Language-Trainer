@@ -14,7 +14,12 @@ def get_category_all(category):
         "forms": entry.forms,
         "senses": entry.senses,
         "glosses": entry.glosses,
-        "examples": entry.examples
+        "examples": entry.examples,
+        "derived": entry.derived,
+        "related": entry.related,
+        "antonyms": entry.antonyms,
+        "hyponyms": entry.hyponyms,
+        "synonyms": entry.synonyms
     } for entry in words]
     
 def get_categories():

@@ -38,6 +38,11 @@ class CategoryEntry(Base):
     glosses = Column(String)
     examples = Column(String)
     category = Column(String)
+    hyponyms = Column(String)
+    antonyms = Column(String)
+    synonyms = Column(String)
+    related = Column(String)
+    derived = Column(String)
 
 Base.metadata.create_all(engine)
 
