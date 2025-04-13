@@ -19,7 +19,7 @@ def set_background(image_url="https://www.transparenttextures.com/patterns/debut
     """
     st.markdown(css, unsafe_allow_html=True)
     
-def load_css(css_file_name="https://ai-language-trainer.streamlit.app/app/static/styles.css"):
+def load_css(css_file_name="styles.css"):
     # move_font_files()
     with open(css_file_name, "r") as f:
         css = f.read()
