@@ -10,3 +10,4 @@ SQLAlchemy==2.0.40
 st-annotated-text==4.0.2
 streamlit-aggrid==1.1.2
 streamlit-highcharts==0.2.0
+psycopg2==2.9.10
