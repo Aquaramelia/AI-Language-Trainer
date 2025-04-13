@@ -5,3 +5,12 @@ data/
 *.txt
 *.csv
 *.db
+*.sqlite
+chromadb_data/
+
+# dictionary data extensions
+
+*.bz2
+*.sql
+*.xml
+*.tsv

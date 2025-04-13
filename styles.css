@@ -517,3 +517,39 @@ th p {
    padding-top: 10px;
    margin-left: 1.5em;
 }
+
+/* Explore vocabulary styles */
+
+.st-key-explore-vocabulary-card {
+	border: 2px solid #4babfff7;
+	border-radius: 15px;
+	padding: 60px 30px;
+	background-color: #00318f30;
+	box-shadow: 0 0 5px #00abff;
+}
+
+.st-key-explore-vocabulary-card [data-testid="stExpanderDetails"] p,
+.st-key-explore-vocabulary-card [data-testid="stExpanderDetails"] li,
+.st-key-explore-vocabulary-card [data-testid="stExpanderDetails"] td {
+   font-size: 1.3rem !important;
+}
+
+.st-key-explore-vocabulary-card .stExpander summary {
+   font-size: 80% !important;
+   color: #b4dcff;
+}
+
+.st-key-explore-vocabulary-card .stExpander p,
+.st-key-explore-vocabulary-card .stExpander td {
+   padding-left: 10px;
+   font-family: "Delius";
+}
+
+.st-key-explore-vocabulary-title {
+   text-align: center;
+}
+
+.st-key-explore-vocabulary-glosses {
+   text-align: center;
+   color: #00ffbd;
+}

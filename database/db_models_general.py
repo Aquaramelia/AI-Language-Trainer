@@ -1,14 +1,17 @@
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
-from datetime import datetime
+import os
+from dotenv import load_dotenv
 
-# Define the SQLite database
-DATABASE_URL = "sqlite:///database/language_trainer.db"
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
+# DATABASE_URL = "sqlite:///language_trainer.db"
 # Set echo=False to silence logs
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL, echo=False)
 
 # Base class for our ORM models
 Base = declarative_base()
+
 
 # User Model
 
