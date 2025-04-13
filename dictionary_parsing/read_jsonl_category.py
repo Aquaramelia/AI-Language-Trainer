@@ -54,6 +54,7 @@ def main(filename, category):
             for ex in sense.get("examples", [])
             if ex and "text" in ex
         })
+        examples_list = examples_list + [f["word"] for f in entry.get("examples", []) if f]
         examples_list = list(set(examples_list))
         
         # List of derived words
@@ -61,6 +62,7 @@ def main(filename, category):
             f["word"]
             for sense in entry.get("senses", []) 
             for f in sense.get("derived", [])]
+        derived_list = derived_list + [f["word"] for f in entry.get("derived", []) if f]
         derived_list = list(set(derived_list))
         
         # List of related words
@@ -68,6 +70,7 @@ def main(filename, category):
             f["word"]
             for sense in entry.get("senses", []) 
             for f in sense.get("related", [])]
+        related_list = related_list + [f["word"] for f in entry.get("related", []) if f]
         related_list = list(set(related_list))
         
         # List of hyponyms
@@ -124,7 +127,7 @@ def main(filename, category):
     
  
 if __name__ == "__main__":
-    category = "Ecology"
+    category = "Botany"
     main(
         filename=f"data/{category}.jsonl",
         category=category
