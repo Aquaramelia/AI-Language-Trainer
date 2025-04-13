@@ -31,6 +31,8 @@ def return_chart(level, levelTitle, graphTitle, colormap, caption):
 
     # Create pie chart
     easychart.config.rendering.responsive = True
+    if "https://code.highcharts.com/modules/variable-pie.js" not in easychart.config.scripts:
+        easychart.config.scripts.append("https://code.highcharts.com/modules/variable-pie.js")
     easychart.config.save()
     chart = easychart.new("variablepie")
     chart.title = graphTitle
