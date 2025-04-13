@@ -25,7 +25,12 @@ def main(filename, category):
         f.write(pretty_entry)
         
         # List of possible forms of the word
-        form_list = [f["form"] for f in entry.get("forms", []) if f and "table" not in f["form"] and "decl" not in f["form"] and "strong" not in f["form"] and "weak" not in f["form"]]
+        form_list = [
+            f["form"] 
+            for f in entry.get("forms", []) 
+            if f and "table-tags" not in f.get("tags") 
+            and "inflection-template" not in f.get("tags")
+            and "class" not in f.get("tags")]
         form_list = list(set(form_list))
         
         # # Entry word
@@ -84,6 +89,17 @@ def main(filename, category):
         hyponyms_list = hyponyms_list + [f["word"] for f in entry.get("hyponyms", []) if f]
         hyponyms_list = list(set(hyponyms_list))
         
+        # List of hypernyms
+        hypernyms_list = [
+            f["word"]
+            for sense in entry.get("senses", [])
+            if sense and "hypernyms" in sense
+            for f in sense["hypernyms"]
+            if "word" in f
+        ]
+        hypernyms_list = hypernyms_list + [f["word"] for f in entry.get("hypernyms", []) if f]
+        hypernyms_list = list(set(hypernyms_list))
+        
         # List of synonyms
         synonyms_list = [f.get("synonyms") for f in entry.get("senses", [])]
         synonyms_list = [x for x in synonyms_list if x is not None]
@@ -106,10 +122,30 @@ def main(filename, category):
         glosses_list = [entry for sublist in glosses_list for entry in sublist]
         glosses_list = list(set(glosses_list))
         
+        # Get appropriate article, if it is a noun
+        head_templates = entry.get("head_templates", [])
+        part_of_speech = ""
+        if head_templates:
+            part_of_speech = head_templates[0].get("name", "")
+        article = ""
+        if part_of_speech and part_of_speech == "de-noun":
+            args = head_templates[0].get("args")
+            if args:
+                gender = args.get("1", "")
+                if gender:
+                    gender = gender[0]
+                    if gender == "m":
+                        article = "der"
+                    elif gender == "f" or gender == "p":
+                        article = "die"
+                    elif gender == "n":
+                        article = "das"
+        
         i -= 1
         
         add_cat_entry(
             word=word,
+            article=article,
             forms=str(form_list),
             senses=str(senses_list),
             glosses=str(glosses_list),
@@ -117,6 +153,7 @@ def main(filename, category):
             related=str(related_list),
             derived=str(derived_list),
             hyponyms=str(hyponyms_list),
+            hypernyms=str(hypernyms_list),
             antonyms=str(antonyms_list),
             synonyms=str(synonyms_list),
             category=category,
@@ -127,7 +164,7 @@ def main(filename, category):
     
  
 if __name__ == "__main__":
-    category = "Botany"
+    category = "Ecology"
     main(
         filename=f"data/{category}.jsonl",
         category=category
