@@ -7,6 +7,7 @@ data/
 *.db
 *.sqlite
 chromadb_data/
+.streamlit/secrets.toml
 
 # dictionary data extensions
 
