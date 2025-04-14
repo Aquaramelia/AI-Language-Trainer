@@ -2,8 +2,6 @@ import streamlit as st
 from components.question_generation import generate_writing_exercise, correct_writing_exercise
 from st_helpers.general_helpers import set_background, load_css
 from database.db_helpers_exercises import log_writing_exercise, log_date_entry, get_writing_topics, save_new_writing_topics
-from components.word_translation import translate_to_english
-from streamlit_input_box import input_box
 
 st.set_page_config(
     page_title="Writing Exercises - AI Language Trainer", 
