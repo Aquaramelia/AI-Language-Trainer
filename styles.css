@@ -18,7 +18,7 @@
   font-family: 'Balsamiq Sans';
   font-style: normal;
   font-weight: 400;
-  src: local("Balsamiq sans") url('./app/static/fonts/balsamiq-sans-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: local("Balsamiq Sans") url('./app/static/fonts/balsamiq-sans-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
 /* balsamiq-sans-italic - latin */
