@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Enum, Date
+from sqlalchemy import NullPool, create_engine, Column, Integer, String, ForeignKey, Enum, Date
 from sqlalchemy.orm import sessionmaker, relationship
 from database.db_models_general import Base
 import os
@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
-# Set echo=False to silence logs
-engine = create_engine(DATABASE_URL, echo=False)
+# Set echo=False to silence logs, NullPool to ensure connections are not kept open too long
+engine = create_engine(DATABASE_URL, echo=False, poolclass=NullPool)
 
 # Verb Table (For Tracking Irregular Verbs)
 

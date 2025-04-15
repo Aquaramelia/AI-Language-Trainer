@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import NullPool, create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 import os
 from dotenv import load_dotenv
@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 # DATABASE_URL = "sqlite:///language_trainer.db"
-# Set echo=False to silence logs
-engine = create_engine(DATABASE_URL, echo=False)
+# Set echo=False to silence logs, NullPool to ensure connections are not kept open too long
+engine = create_engine(DATABASE_URL, echo=False, poolclass=NullPool)
 
 # Base class for our ORM models
 Base = declarative_base()
