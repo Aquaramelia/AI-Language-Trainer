@@ -2,12 +2,9 @@ import streamlit as st
 from database.db_helpers_exercises import get_essay_index, get_essay_content
 from st_helpers.general_helpers import set_background, load_css
 
-st.set_page_config(
-    page_title="Essay Index - AI Language Trainer", 
-    page_icon="📖",
-    layout="wide")
 set_background()
 load_css()
+
 st.title("Essay Index")
 st.header("Take a moment to review your past writing exercises!")
 st.divider()

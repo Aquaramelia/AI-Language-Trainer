@@ -6,12 +6,9 @@ from components.question_generation import generate_noun_irregular_article_exerc
 from st_helpers.general_helpers import set_background, load_css
 from components.word_translation import translate_to_english
 
-st.set_page_config(
-    page_title="Noun Article Exercises - AI Language Trainer", 
-    page_icon="📖",
-    layout="wide")
 set_background()
 load_css()
+
 st.title("Noun Article Exercises")
 st.header("Practice choosing the correct German articles: *der, die, das*.")
 

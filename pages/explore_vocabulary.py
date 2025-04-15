@@ -7,13 +7,9 @@ from st_helpers.general_helpers import safe_join, safe_bullets, safe_table_cell
 from st_helpers.aggrid_explore_vocabulary import display_grid
 from annotated_text import annotated_text, annotation, parameters
 
-st.set_page_config(
-    page_title="Explore Vocabulary - AI Language Trainer",
-    page_icon="📖",
-    layout="wide",
-    initial_sidebar_state="collapsed")
 set_background()
 load_css()
+
 st.title("Explore Vocabulary")
 st.header("Discover new words across thematical categories - build your own vocabulary inventory!")
 st.divider()

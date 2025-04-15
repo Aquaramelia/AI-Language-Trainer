@@ -8,10 +8,10 @@ import st_helpers.progress_chart as progress_chart
 import st_helpers.progress_vocabulary as progress_vocabulary
 from st_helpers.vocabulary_helpers import available_modes,available_modes_r, return_chart_levels
 
-st.set_page_config(page_title="Home - AI Language Trainer", page_icon="📖", layout="wide")
 set_background()
 load_css()
-st.title("Welcome to the AI Language Trainer!")
+    
+st.title("Progress Dashboard")
 st.header("This is your dashboard! Take a moment to explore and check out your results ✨")
 st.divider()
 if "session_mode" not in st.session_state or st.session_state.session_mode != "home":
