@@ -25,8 +25,10 @@ if "last_category" not in st.session_state:
     st.session_state.last_category = ""
 if "last_category_dataframe" not in st.session_state:
     st.session_state.last_category_dataframe = None
+if "categories" not in st.session_state:
+    st.session_state.categories = get_categories()
 
-categories = get_categories()
+categories = st.session_state.categories
 
 st.markdown("""
     <style>
