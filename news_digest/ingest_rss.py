@@ -49,7 +49,8 @@ conn.close()
 # --- Helpers ---
 def fetch_feed_articles(feed_url: str, feed_name: str, max_items: int = 5) -> List[ArticleItem]:
     feed = feedparser.parse(feed_url)
-    entries = feed.entries[:max_items]
+    # entries = feed.entries[:max_items]
+    entries = feed.entries
     article_items = []
 
     for entry in entries:
