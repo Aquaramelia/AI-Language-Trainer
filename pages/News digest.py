@@ -71,7 +71,7 @@ with tab_feed:
                     feed_selection = selectbox_selection
 
                 if feed_selection and feed_selection != st.session_state.last_feed:
-                    articles_dict = [return_article(name, a) for name, articles in st.session_state.news_articles.items() for a in articles]
+                    articles_dict = [return_article(feed_selection, articles) for articles in st.session_state.news_articles[feed_selection]]
                     st.code(f"🔍 Loaded {len(st.session_state.news_articles[feed_selection])} entries from the RSS feed of {feed_selection}")
                     st.toast("Retrieving RSS feed data...", icon="⏳")
                     feed_df = pd.DataFrame(articles_dict)
