@@ -5,6 +5,7 @@ from st_helpers.news_digest_helpers import save_to_database, return_article, exe
 from st_helpers.general_helpers import set_background, load_css
 from st_helpers.aggrid_news_digest import display_grid
 import pandas as pd
+from annotated_text import annotated_text, annotation, parameters
 
 st.set_page_config(
     page_title="News Digest - AI Language Trainer",
@@ -12,9 +13,20 @@ st.set_page_config(
     layout="wide")
 set_background()
 load_css()
+
+st.markdown("""
+    <style>
+    [data-testid="stSelectboxVirtualDropdown"] * {
+    font-size: 99% !important;
+    }
+""", unsafe_allow_html=True)
+
 st.title("News Digest")
 st.header("Take a look at recent news from real German news feeds and choose some interesting ones!")
-st.caption("Articles for practice may differ slighlty from the original ones.")
+with st.container(
+    key="news-digest-subtitle-caption"
+):
+    st.caption("Articles for practice may differ slighlty from the original ones.")
 USER_ID = 1
 
 if "last_feed" not in st.session_state:
@@ -51,7 +63,7 @@ tab_feed, tab_practice, tab_progress = st.tabs(["Browse feed", "Practice exercis
 
 with tab_feed:
     with st.container(
-        key="news-browse-container"
+        key="question-container-"
     ):
         col1, col2 = st.columns([1,2])
         feed_selection:str = ""
@@ -72,7 +84,7 @@ with tab_feed:
 
                 if feed_selection and feed_selection != st.session_state.last_feed:
                     articles_dict = [return_article(feed_selection, articles) for articles in st.session_state.news_articles[feed_selection]]
-                    st.code(f"🔍 Loaded {len(st.session_state.news_articles[feed_selection])} entries from the RSS feed of {feed_selection}")
+                    st.code(f"🔍 Loaded {len(st.session_state.news_articles[feed_selection])} entries from the RSS feed of {feed_selection}", wrap_lines=True)
                     st.toast("Retrieving RSS feed data...", icon="⏳")
                     feed_df = pd.DataFrame(articles_dict)
 
@@ -108,22 +120,37 @@ with tab_feed:
                         key="news-digest-article-title"
                     ):
                         title = matching_row.get("title", "")
-                        st.write(title)
-                    with st.container(
-                        key="news-digest-article-feed-name"
-                    ):
-                        feed_name = matching_row.get("feed_name", "")
-                        st.write(feed_name)
+                        annotated_text(
+                            annotation(
+                                title,
+                                "",
+                                background="rgb(8,0,99)",
+                                color="rgb(255,185,77)",
+                                font_family="Delius",
+                                border="1px solid #ffffffa8",
+                                font_size="100%",
+                                text_align="center"
+                            )
+                        )
                     with st.container(
                         key="news-digest-article-url"
                     ):
                         url = matching_row.get("url", "")
                         st.write(url)
-                    with st.container(
-                        key="news-digest-article-published"
-                    ):
-                        published = matching_row.get("published", "")
-                        st.write(published)
+                    col3, col4 = st.columns([1,1])
+                    with col3:
+                        with st.container(
+                            key="news-digest-article-feed-name"
+                        ):
+                            feed_name = matching_row.get("feed_name", "")
+                            st.write(feed_name)
+                    with col4:
+                        with st.container(
+                            key="news-digest-article-published"
+                        ):
+                            published = matching_row.get("published", "")
+                            st.write(published)
+                    st.divider()
                     with st.container(
                         key="news-digest-article-text"
                     ):

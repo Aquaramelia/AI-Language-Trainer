@@ -7,7 +7,7 @@ def display_grid(feed_df: pd.DataFrame, feed_selection: str):
                     
     custom_theme = StAggridTheme(base="quartz").withParams(
         fontSize=16,
-        rowBorder=False,
+        rowBorder=True,
         backgroundColor="#273aa4c7",
         foregroundColor="#fff"
     ).withParts('iconSetAlpine')  
@@ -15,7 +15,7 @@ def display_grid(feed_df: pd.DataFrame, feed_selection: str):
     gb = GridOptionsBuilder.from_dataframe(feed_df[["title"]])
     gb.configure_column(
         "title",
-        header_name=f"Words in category: {feed_selection}",
+        header_name=f"Showing articles from: {feed_selection}",
         cellRenderer=CustomHtmlCellRenderer,
         autoHeight=True,
         wrapText=True
@@ -39,7 +39,7 @@ def display_grid(feed_df: pd.DataFrame, feed_selection: str):
     grid_response = AgGrid(
         feed_df[["title"]],
         gridOptions=grid_options,
-        height=600,
+        height=1000,
         update_mode=GridUpdateMode.SELECTION_CHANGED,
         allow_unsafe_jscode=True,
         enable_enterprise_modules=False,
