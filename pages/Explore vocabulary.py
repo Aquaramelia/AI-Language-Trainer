@@ -97,8 +97,11 @@ with st.container(
                     with st.container(
                         key="explore-vocabulary-title"
                     ):
+                        article = matching_row.get("article")
                         word = matching_row.get("word")
                         if word:
+                            if article:
+                                word = word + ", " + article
                             parameters.PADDING = "0.5em 0.75rem"
                             annotated_text(
                                 annotation(

@@ -11,6 +11,7 @@ def get_category_all(category):
     session.close()
     return [{
         "word": entry.word,
+        "article": entry.article,
         "forms": entry.forms,
         "senses": entry.senses,
         "glosses": entry.glosses,
