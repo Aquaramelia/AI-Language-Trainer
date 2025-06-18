@@ -22,7 +22,7 @@ def return_chart(data, days, title):
 
     # Build chart using Altair
     chart = alt.Chart(df).mark_bar(
-        cornerRadiusEnd=5,
+        cornerRadius=5,
         line=True,
         size=20
         ).encode(
@@ -33,7 +33,7 @@ def return_chart(data, days, title):
                 format='%b %d', 
                 labelColor='white', 
                 titleColor='white',
-                tickCount='day',
+                tickCount=24,
                 ),
             # scale=alt.Scale(domainMid=10, padding=10)
             ),
@@ -46,20 +46,24 @@ def return_chart(data, days, title):
                 offset=20
                 )
             ),
-        color=alt.Color('Exercises').scale(scheme="purples").legend(
-            title="Exercises answered",
-            labelFontSize=14, 
-            titleFontSize=17, 
-            direction="horizontal", 
-            orient="none", 
-            gradientThickness=5,
-            legendX=-85,
-            legendY=-60,
-            labelOpacity=0.8,
-            titleAnchor="middle",
-            # titlePadding=20,
-            titleOrient="top",
-            titleBaseline="line-top"
+            color=alt.Color(
+                'Exercises',
+                scale=alt.Scale(scheme="purples"),
+                legend=alt.Legend(
+                    title="Exercises answered",
+                    labelFontSize=14, 
+                    titleFontSize=17, 
+                    direction="horizontal", 
+                    orient="none", 
+                    gradientThickness=5,
+                    legendX=-85,
+                    legendY=-60,
+                    labelOpacity=0.8,
+                    titleAnchor="middle",
+                    # titlePadding=20,
+                    titleOrient="top",
+                    titleBaseline="top"
+                )
             )
     ).properties(
         title=alt.TitleParams(
