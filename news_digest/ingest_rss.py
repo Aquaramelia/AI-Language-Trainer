@@ -6,16 +6,14 @@ import feedparser
 from datetime import datetime
 from typing import Dict, List
 from transformers import AutoTokenizer, BertForNextSentencePrediction
-import torch
 from bs4 import BeautifulSoup
 from newspaper import Article
 from nltk.tokenize import sent_tokenize
 from dotenv import load_dotenv
+from concurrent.futures import ThreadPoolExecutor
 
 from news_digest import news_models
 from news_digest.news_models import ArticleItem, RSS_FEEDS
-
-torch.classes.__path__ = []
 
 # Download NLTK resources
 nltk.download('punkt')
@@ -47,34 +45,33 @@ conn.commit()
 conn.close()
 
 # --- Helpers ---
-def fetch_feed_articles(feed_url: str, feed_name: str, max_items: int = 5) -> List[ArticleItem]:
+def process_entry(entry, feed_name):
+    url = entry.link
+    try:
+        art = Article(url, language='de')
+        art.download()
+        art.parse()
+        if len(art.text.split()) < 50:
+            return None
+        return ArticleItem(
+            title=art.title or entry.get("title", ""),
+            url=url,
+            published=entry.get("published", ""),
+            text=art.text,
+            feed_name=feed_name
+        )
+    except Exception as e:
+        print(f"Error processing {url}: {e}")
+        return None
+
+
+def fetch_feed_articles(feed_url: str, feed_name: str) -> List[ArticleItem]:
     feed = feedparser.parse(feed_url)
-    # entries = feed.entries[:max_items]
     entries = feed.entries
-    article_items = []
 
-    for entry in entries:
-        url = entry.link
-        try:
-            text = extract_text_from_url(url)
-            if len(text.split()) < 50:
-                continue
-
-            art = Article(url, language='de')
-            art.download()
-            art.parse()
-            title = art.title or entry.get("title", "")
-
-            article_items.append(ArticleItem(
-                title = str(art.title or entry.get("title") or ""),
-                url = str(entry.get("link") or ""),
-                published = str(entry.get("published") or ""),
-                text=text,
-                feed_name=feed_name
-            ))
-        except Exception as e:
-            print(f"Error processing {url}: {e}")
-            continue
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        results = list(executor.map(process_entry, entries, feed_name))
+    article_items = [item for item in results if item is not None]
 
     return article_items
 
@@ -87,19 +84,6 @@ def insert_article_to_db(article: ArticleItem):
         (article.title, article.url, article.published, article.text))
     conn.commit()
     conn.close()
-
-def extract_text_from_url(url):
-    # Use Newspaper3k for robust content extraction
-    art = Article(url, language='de')
-    art.download()
-    art.parse()
-    art.nlp() 
-    clean_node = art.clean_top_node
-    if clean_node is not None:
-        text = clean_node.text_content()
-    else:
-        text = art.text
-    return art.text or ''
 
 # --- Main Ingestion ---
 def ingest_from_rss() -> Dict[str, List[ArticleItem]]:
