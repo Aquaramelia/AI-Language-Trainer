@@ -9,6 +9,7 @@ class ArticleItem:
     text: str
     published: str
     feed_name: str
+    status: str
 
 # List of German news RSS feeds
 RSS_FEEDS: Dict[str,str] = {
