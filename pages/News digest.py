@@ -1,7 +1,7 @@
 from numpy import select
 import streamlit as st
 from st_helpers import news_digest_helpers
-from st_helpers.news_digest_helpers import save_to_database, return_article, execute_rss_ingestion, return_selectbox_feed_categories
+from st_helpers.news_digest_helpers import return_article, execute_rss_ingestion, return_selectbox_feed_categories
 from st_helpers.general_helpers import set_background, load_css
 from st_helpers.aggrid_news_digest import display_grid
 import pandas as pd
@@ -36,6 +36,7 @@ if "last_article_displayed" not in st.session_state:
 if "last_feed_dataframe" not in st.session_state:
     st.session_state.last_feed_dataframe = ""
 if "news_articles" not in st.session_state:
+    st.toast("Loading content...", icon="⏳")
     st.session_state.news_articles = execute_rss_ingestion()
 
 # State of generating new articles
@@ -47,6 +48,7 @@ generation_button_key = "generate-articles-button"
 
 with col2:
     if st.button("Generate new articles! 🗞️", key=generation_button_key, disabled=st.session_state.feed_retrieval_in_progress, use_container_width=True):
+        st.toast("Loading content...", icon="⏳")
         st.session_state.feed_retrieval_in_progress = True
         st.session_state.news_articles = execute_rss_ingestion()
         st.session_state.feed_retrieval_in_progress = False
@@ -85,22 +87,19 @@ with tab_feed:
                 if feed_selection and feed_selection != st.session_state.last_feed:
                     articles_dict = [return_article(feed_selection, articles) for articles in st.session_state.news_articles[feed_selection]]
                     st.code(f"🔍 Loaded {len(st.session_state.news_articles[feed_selection])} entries from the RSS feed of {feed_selection}", wrap_lines=True)
-                    st.toast("Retrieving RSS feed data...", icon="⏳")
+                    st.toast("Displaying category...", icon="📒")
                     feed_df = pd.DataFrame(articles_dict)
 
                     st.session_state.last_feed = feed_selection
                     st.session_state.last_feed_dataframe = feed_df
 
                 if feed_df is not None and type(feed_df) == pd.DataFrame:
-                    print(feed_df.head())
                     grid_response = display_grid(feed_df=feed_df, feed_selection=feed_selection)
 
                     # Get selected row
                     selected = grid_response.selected_rows
-                    print(selected)
                     selected_word = ""
                     if selected is not [] and selected is not None:
-                        print(selected.iloc[0])
                         selected_article = selected.iloc[0]["title"]
                         if selected_article is not None:
                             st.session_state.last_article_displayed = selected_article
