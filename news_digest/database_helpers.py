@@ -129,3 +129,17 @@ def get_articles_from_db(DB_PATH: str, limit: int = 10) -> Dict[str,List[Article
         grouped_articles[feed] = grouped_articles[feed][:limit]
 
     return dict(grouped_articles)
+
+def update_article_status(conn, url: str, accepted: bool):
+    """
+    Update the article's status to accepted or rejected 
+    after the corresponding user action.
+    """
+    new_status = "accepted" if accepted else "rejected"
+    c = conn.cursor()
+    c.execute('''
+        UPDATE articles
+        SET status = ?
+        WHERE source_url = ?
+    ''', (new_status, url))
+    conn.commit()

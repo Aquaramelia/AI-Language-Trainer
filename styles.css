@@ -565,11 +565,6 @@ th p {
    font-family: Delius;
 }
 
-.st-key-news-digest-article-feed-name p {
-   font-size: 80% !important;
-   font-family: Delius;
-}
-
 .st-key-news-digest-article-url a {
    font-size: 70% !important;
    color: #00ffbd !important;
@@ -577,12 +572,14 @@ th p {
 
 .st-key-news-digest-article-url p {
    text-align: center;
+   line-height: 1.2;
 }
 
 .st-key-news-digest-article-published p{
-   font-size: 75% !important;
-   text-align: right;
+   font-size: 70% !important;
+   text-align: center;
    font-family: Delius;
+   line-height: 1;
 }
 
 .st-key-news-digest-article-text p {
@@ -598,4 +595,14 @@ th p {
 .st-key-news-digest-subtitle-caption p {
    text-align: center;
    color: #fff;
+}
+
+.st-key-accept-article button {
+   font-size: 70% !important;
+   background-color: #002e22;
+}
+
+.st-key-reject-article button {
+   font-size: 70% !important;
+   background-color: #380000;
 }
