@@ -1,7 +1,7 @@
 # AI Language Trainer
 
 AI Language Trainer is an interactive web application that helps users practice and expand their vocabulary in a target language.  
-Built with Python and Streamlit, it combines a searchable dictionary with AI-powered retrieval to make language study more engaging and efficient.
+Built with Python and Streamlit, it combines a filterable dictionary with AI-powered exercise generation to make language study more engaging and efficient.
 
 ## What It Does
 
